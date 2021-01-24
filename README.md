@@ -1,2 +1,2 @@
 # wafbot
-wafbotf
+wafbot
