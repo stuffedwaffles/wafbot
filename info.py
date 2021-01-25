@@ -35,7 +35,7 @@ async def botinfo(msg):
 
     await msg.channel.send(embed=embed)
 
-async def use(msg):
+async def user(msg):
     for user in msg.mentions:
         id = user.id
         avatar = user.avatar_url

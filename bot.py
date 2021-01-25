@@ -15,8 +15,13 @@ from ppl import *
 from moderation import *
 from music import *
 import logging
+import json
+from discord import FFmpegPCMAudio
+from youtube_dl import YoutubeDL
+
+
 intents = discord.Intents.default()
-intents.members = True
+
 
 #define the bot
 client = discord.Client(intents=intents)
@@ -145,6 +150,31 @@ async def on_message(msg):
 
     if msg.content.startswith("="):
         #people cmds
+        if msg.content=="=ping":
+            await msg.channel.send(f'Pong!🏓\n`Responded in {round(client.latency * 1000)}ms`')
+
+        # attempted to optimize, not working rn
+        # elif msg.content[0:5] == "=join":
+        #     await join(client, msg)
+
+        # elif "leave" in msg.content:
+        #     await leave(client, msg)
+
+        # elif "play" in msg.content:
+        #     await play(client, msg)
+
+        # else:
+        #     try:
+        #         exec("await " + msg.content[1:]+"(msg)")
+        #     except Exception as e:
+        #         print(str(e))
+        #         embed=discord.Embed(title="Invalid Command.", description="Do =help for a list of commands.", color=0x06f459)
+        #         embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
+        #         await msg.channel.send(embed=embed)
+
+        elif "user" in msg.content:
+            await user(msg)
+
         if "waffle" in msg.content:
             await waffle(msg)
 
@@ -169,17 +199,12 @@ async def on_message(msg):
         elif "aqwuah" in msg.content:
             await aqwuah(msg)
 
-        elif "ping" in msg.content:
-            await msg.channel.send(f'Pong!🏓\n`Responded in {round(client.latency * 1000)}ms`')
             #info stuff
         elif "help" in msg.content:
             await help(msg)
     
         elif "botinfo" in msg.content:
             await botinfo(msg)
-
-        elif "user" in msg.content:
-            await use(msg)
         
         elif "serverinfo" in msg.content:
             await serverinfo(msg)
@@ -245,32 +270,46 @@ async def on_message(msg):
         
         elif "shutdown" in msg.content:
             await shutdown(client, msg)
-
-    
-        
-        #music
-        elif "join" in msg.content:
+   
+        # music
+        elif msg.content[0:5] == "=join":
             await join(client, msg)
 
-        elif "leave" in msg.content:
+        elif msg.content[0:6] == "=leave":
             await leave(client, msg)
 
-        elif "play" in msg.content:
+        elif msg.content[0:5] == "=play":
             await play(client, msg)
         
+        elif "pause" in msg.content:
+            await pause(client, msg)
+        
+        elif "resume" in msg.content:
+            await resume(client, msg)
+
+        elif "addq" in msg.content:
+            await addq(client, msg)
+        
+        elif "queue" in msg.content:
+            await queue(client, msg)
+
+        elif "clear" in msg.content:
+            await clear(client, msg)
         
         else:
             embed=discord.Embed(title="Invalid Command.", description="Do =help for a list of commands.", color=0x06f459)
             embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
             await msg.channel.send(embed=embed)
-    #logging commands n stuff ish
+
+        #logging commands n stuff ish
         guild = client.get_guild(762718463575064636)
         channel = client.get_channel(801262872955977729)
         embed=discord.Embed(title=str(msg.author), description=None, color=0x06f459)
+        log_info = (str(msg.author) + " ran command " + str(msg.content) + " at " + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")))
         embed.add_field(name="ran a command in " + str(msg.channel), value="`" + str(msg.content) + "` at " + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")))
         embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
         await channel.send(embed=embed)
-        print (msg.author + " ran command " + msg.content + " at " + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")))
+        await command_logger(log_info)
 
 
 
@@ -284,11 +323,7 @@ async def on_member_join(member):
     await member.add_roles(role)
     
     await channel.send("Hey there " + member.mention + "! Welcome to " + str(member.guild.name) + "! If you need any help feel free to ask the admins, and to see a list of my commands do =help in #bot-commands. Enjoy your stay!")
-
-
-
-        
-    
+       
 #bot status + game
 @client.event
 async def on_ready():
@@ -299,12 +334,14 @@ async def on_ready():
     await channel.send("Bot is online!", delete_after=2.0)
     
     print("ayo ready to kode")
-    
-    
 
-import json
+async def command_logger(content):  
+    f = open(os.getcwd()+"/log.txt", "w+")
+    f.write(content + "\n")
+    f.close() 
+   
 
-with open("secrets.json") as f:
+with open(os.getcwd()+"/secrets.json") as f:
     secrets = json.load(f)
 
 client.run(secrets['token'])

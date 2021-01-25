@@ -1,8 +1,12 @@
-#language filter
-    if "fuck" in msg.content.lower() or "shit" in msg.content.lower() or "damn" in msg.content.lower() or "bitch" in msg.content.lower():
+import random
+
+def get_rid_of_errors(msg):
+    #language filter
+    if msg.content.lower() in ["fuck", "shit"]:
         user = msg.author
         if user.bot == False:
             member = msg.author
             numb = random.randint(1,5)
             if numb == 2:
-                await msg.channel.send("Hey " + member.mention + "! Watch your fucking language.")
+                await msg.channel.send("Hey " + member.mention + "! Watch your pooping language.")
+
