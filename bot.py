@@ -282,6 +282,9 @@ async def on_message(msg):
     
     if "=shutdown" in msg.content:
         await shutdown(client, msg)
+    
+    if "=yeet" in msg.content:
+        await yeet(msg)
 
     # music
     if "=join" in msg.content:
@@ -335,7 +338,7 @@ async def on_ready():
     
     channel = client.get_channel(801262872955977729)
     
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.watching, name="netflix! | type =help"))
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="nothing. | type =help"))
     await channel.send("Bot is online!", delete_after=2.0)
     
     print("ayo ready to kode")

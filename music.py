@@ -19,13 +19,6 @@ client = discord.Client()
 song_queue = []
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True'}
-
-def play_next(ctx):
-    voice = get(client.voice_clients, guild=ctx.guild)
-    if len(song_queue) > 1:
-        del song_queue[0]
-        voice.play(discord.FFmpegPCMAudio(song_queue[0][source], **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
-        voice.is_playing()
     
 def search(arg):
     try: requests.get("".join(arg))
@@ -35,6 +28,13 @@ def search(arg):
         info = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries'][0]
         
     return {'source': info['formats'][0]['url'], 'title': info['title']}
+
+def play_next(ctx):
+    voice = get(client.voice_clients, guild=ctx.guild)
+    if len(song_queue) > 1:
+        del song_queue[0]
+        voice.play(discord.FFmpegPCMAudio(song_queue[0], **FFMPEG_OPTIONS), after=lambda e: play_next(ctx))
+        voice.is_playing()
 
 
 @client.event
@@ -75,32 +75,11 @@ async def url(msg):
    
 
 async def play(client, msg):
-    query1 = msg.content.split(" ")[1:]
+    voice = get(client.voice_clients, guild=msg.channel.guild)
     
-    arg = str(query1)
-    print (arg)
-
-    channel = msg.author.voice.channel
-
-    if channel:
-        voice = get(client.voice_clients, guild=msg.channel.guild)
-        song = search(arg)
-        song_queue.append(song)
-        print (song)
-
-        if voice and voice.is_connected():
-            await voice.move_to(channel)
-        else: 
-            voice = await channel.connect()
-
-        if not voice.is_playing():
-            voice.play(discord.FFmpegPCMAudio(song, **FFMPEG_OPTIONS))
-            voice.is_playing()
-        else:
-            await msg.channel.send("Added to queue")
-    else:
-        await msg.channel.send("You're not connected to any channel!")
-    await msg.channel.send("No! :D")
+    voice.play(discord.FFmpegPCMAudio("/home/pi/waf bot/wafbot/Rick Astley - Never Gonna Give You Up (Video)-dQw4w9WgXcQ.webm"))
+    voice.is_playing()
+    
     
     
 

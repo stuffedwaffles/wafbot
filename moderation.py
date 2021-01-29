@@ -6,12 +6,11 @@ import asyncio
 
 
 client = discord.Client()
-#mod commands- majority not working at the moment
+#mod commands
 
 @client.event
 async def kick(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     member = msg.author
     if discord.utils.get(member.roles, name="Head Admin") is None:
         await msg.channel.send("You don't have permission to kick ")
@@ -23,8 +22,7 @@ async def kick(msg):
         
 @client.event
 async def ban(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     member = msg.author
     if discord.utils.get(member.roles, name="Head Admin") is None:
         for user in msg.mentions:
@@ -40,8 +38,7 @@ async def ban(msg):
 
 @client.event
 async def mute(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     member = msg.author
     if discord.utils.get(member.roles, name="Head Admin") is None:
         for user in msg.mentions:
@@ -56,8 +53,7 @@ async def mute(msg):
             await msg.channel.send(str(user) + " has been muted")
 
 async def unmute(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     member = msg.author
     if discord.utils.get(member.roles, name="Head Admin") is None:
         for user in msg.mentions:
@@ -71,8 +67,7 @@ async def unmute(msg):
             await msg.channel.send(str(user) + " has been unmuted")
 
 async def nick(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     nick = msg.content.split(" ")[2:]
     actualnick = ''.join(nick)
     if msg.content.split(" ")[1] == "reset":
@@ -88,8 +83,7 @@ async def nick(msg):
             await msg.channel.send(str(user) + "'s nick has been changed.")
 
 async def warn(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     warnin = msg.content.split(" ")[2:]
     warning = ''.join(warnin)
     for user in msg.mentions:
@@ -98,8 +92,7 @@ async def warn(msg):
         
 
 async def shutdown(client, msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     if discord.utils.get(msg.author.roles, name="Head Admin") is None:
         await msg.channel.send("You can't do that.")
     else:
@@ -112,13 +105,23 @@ async def shutdown(client, msg):
         await client.logout()
         print ("Bot shutdown")
 
+async def yeet(msg):
+    if discord.utils.get(msg.author.roles, name="Head Admin") is None:
+        await msg.channel.send("You can't do that.")
+    else:
+        llimit = msg.content.split(" ")[1]
+        await msg.channel.purge(limit=int(llimit))
+        await msg.channel.send("Chat cleared by " + msg.author.display_name, delete_after=2.0)
+        
+        await asyncio.sleep(5.0)
+        
+
 
 
 async def addrole(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     member = msg.author
-    memberid = msg.author.id
+    
     rolemsg = msg.content.split(" ")[2]
     if rolemsg == "nsfw":
         role = get(msg.guild.roles , name='nsfw')
@@ -241,10 +244,9 @@ async def addrole(msg):
     
 
 async def delrole(msg):
-    guild = client.get_guild(762718463575064636)
-    channel = msg.channel
+    
     member = msg.author
-    memberid = msg.author.id
+    
     rolemsg = msg.content.split(" ")[2]
     if rolemsg == "nsfw":
         role = get(msg.guild.roles , name='nsfw')

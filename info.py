@@ -32,7 +32,7 @@ async def helpmod(msg):
     embed=discord.Embed(title="Waf Bot moderator commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/800783415137534012/Screenshot_2021-01-18_at_17.46.37.png")
     embed.add_field(name="Banning, Kicking, Muting-", value="=ban, =kick, =mute, =unmute, =warn", inline=False)
-    embed.add_field(name="Moderator only commands-", value="=say, =nick, =addrole, =delrole, =shutdown", inline=False)
+    embed.add_field(name="Moderator only commands-", value="=say, =nick, =addrole, =delrole, =shutdown, =yeet", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
