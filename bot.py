@@ -18,7 +18,8 @@ import logging
 import json
 from discord import FFmpegPCMAudio
 from youtube_dl import YoutubeDL
-
+import urllib.parse, urllib.request, re
+import wavelink
 
 intents = discord.Intents.default()
 
@@ -38,7 +39,7 @@ logger.addHandler(handler)
 @client.event
 async def on_message(msg):
 
-    guild = client.get_guild(762718463575064636)
+    
     #basic commands and responses for fun
     
     if msg.content.startswith("pong"):
@@ -144,16 +145,7 @@ async def on_message(msg):
             await msg.add_reaction("✈️")
     
     
-        
-
-       
-
-    if msg.content.startswith("="):
-        #people cmds
-        if msg.content=="=ping":
-            await msg.channel.send(f'Pong!🏓\n`Responded in {round(client.latency * 1000)}ms`')
-
-        # attempted to optimize, not working rn
+      # attempted to optimize, not working rn
         # elif msg.content[0:5] == "=join":
         #     await join(client, msg)
 
@@ -170,139 +162,152 @@ async def on_message(msg):
         #         print(str(e))
         #         embed=discord.Embed(title="Invalid Command.", description="Do =help for a list of commands.", color=0x06f459)
         #         embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
-        #         await msg.channel.send(embed=embed)
+        #         await msg.channel.send(embed=embed)  
 
-        elif "user" in msg.content:
-            await user(msg)
+       
 
-        if "waffle" in msg.content:
-            await waffle(msg)
-
-        elif "jedi" in msg.content:
-            await jedi(msg)
-
-        elif "para" in msg.content:
-            await para(msg)
-
-        elif "ched" in msg.content:
-            await ched(msg)
-
-        elif "rick" in msg.content:
-            await rick(msg)
-
-        elif "destiny" in msg.content:
-            await destiny(msg)
-
-        elif "daky" in msg.content:
-            await daky(msg)
-
-        elif "aqwuah" in msg.content:
-            await aqwuah(msg)
-
-            #info stuff
-        elif "help" in msg.content:
-            await help(msg)
     
-        elif "botinfo" in msg.content:
-            await botinfo(msg)
         
-        elif "serverinfo" in msg.content:
-            await serverinfo(msg)
+    if "=ping" in msg.content:
+        await msg.channel.send(f'Pong!🏓\n`Responded in {round(client.latency * 1000)}ms`')
+
+    if "=user" in msg.content:
+        await user(msg)
+
+    if "=waffle" in msg.content:
+        await waffle(msg)
+
+    if "=jedi" in msg.content:
+        await jedi(msg)
+
+    if "=para" in msg.content:
+        await para(msg)
+
+    if "=ched" in msg.content:
+        await ched(msg)
+
+    if "=rickroll" in msg.content:
+        await rick(msg)
+
+    if "=destiny" in msg.content:
+        await destiny(msg)
+
+    if "=daky" in msg.content:
+        await daky(msg)
+
+    if "=aqwuah" in msg.content:
+        await aqwuah(msg)
+
+        #info stuff
+    if "=help" in msg.content:
+        await help(msg)
+    
+    if "=help fun" in msg.content:
+        await helpfun(msg)
+    
+    if "=help mod" in msg.content:
+        await helpmod(msg)
+    
+    if "=help info" in msg.content:
+        await helpinfo(msg)
+    
+    if "=help music" in msg.content:
+        await helpmusic(msg)
+
+    if "=botinfo" in msg.content:
+        await botinfo(msg)
+    
+    if "=serverinfo" in msg.content:
+        await serverinfo(msg)
+    
+    if "=ip" in msg.content:
+        await ip(msg)
+
+    if "=hypickle" in msg.content:
+        await hypickle(msg)
+
+    if "=invite" in msg.content:
+        await invite(msg)
+
+    if "=myid" in msg.content:
+        await myid(msg)     
+
+    if "=github" in msg.content:
+        await github(msg)
+       
+
+        #games
+    if "=dog" in msg.content:
+        await dog(msg)
+
+    if "=cat" in msg.content:
+        await cat(msg)
+
+    if "=rps" in msg.content:
+        await rps(msg)
+    
+    if "=roll" in msg.content:
+        await roll(msg)
+    
+    if "=say" in msg.content:
+        await say(msg)
+
+        #mod commands
+    if "=kick" in msg.content:
+        await kick(msg)
+
+    if "=ban" in msg.content:
+        await ban(msg)
+
+    if "=mute" in msg.content:
+        await mute(msg)
+
+    if "=unmute" in msg.content:
+        await unmute(msg)
+
+    if "=nick" in msg.content:
+        await nick(msg)
+
+    if "=addrole" in msg.content:
+        await addrole(msg)
+    
+    if "=warn" in msg.content:
+        await warn(msg)
+
+    if "=dm" in msg.content:
+        await dm(msg)
+
+    if "=delrole" in msg.content:
+        await delrole(msg)
+    
+    if "=shutdown" in msg.content:
+        await shutdown(client, msg)
+
+    # music
+    if "=join" in msg.content:
+        await join(client, msg)
+
+    if "=leave" in msg.content:
+        await leave(client, msg)
+
+    if "=play" in msg.content:
+        await play(client, msg)
+    
+    if "=pause" in msg.content:
+        await pause(client, msg)
+    
+    if "=resume" in msg.content:
+        await resume(client, msg)
+    
+    if "=url" in msg.content:
+        await url(msg)
+
         
-        elif "ip" in msg.content:
-            await ip(msg)
-
-        elif "hypickle" in msg.content:
-            await hypickle(msg)
         
-        elif "vantage" in msg.content:
-            await vantage(msg)
-
-        elif "invite" in msg.content:
-            await invite(msg)
-
-        elif "myid" in msg.content:
-            await myid(msg)        
-
-            #games
-        elif "dog" in msg.content:
-            await dog(msg)
-
-        elif "cat" in msg.content:
-            await cat(msg)
-
-        elif "rps" in msg.content:
-            await rps(msg)
         
-        elif "roll" in msg.content:
-            await roll(msg)
-        
-        elif "say" in msg.content:
-            await say(msg)
-
-            #mod commands
-        elif "kick" in msg.content:
-            await kick(msg)
-
-        elif "ban" in msg.content:
-            await ban(msg)
-
-        elif "mute" in msg.content:
-            await mute(msg)
-
-        elif "unm" in msg.content:
-            await unmute(msg)
-
-        elif "nick" in msg.content:
-            await nick(msg)
-
-        elif "addrole" in msg.content:
-            await addrole(msg)
-        
-        elif "warn" in msg.content:
-            await warn(msg)
-
-        elif "dm" in msg.content:
-            await dm(msg)
-
-        elif "delrole" in msg.content:
-            await delrole(msg)
-        
-        elif "shutdown" in msg.content:
-            await shutdown(client, msg)
-   
-        # music
-        elif msg.content[0:5] == "=join":
-            await join(client, msg)
-
-        elif msg.content[0:6] == "=leave":
-            await leave(client, msg)
-
-        elif msg.content[0:5] == "=play":
-            await play(client, msg)
-        
-        elif "pause" in msg.content:
-            await pause(client, msg)
-        
-        elif "resume" in msg.content:
-            await resume(client, msg)
-
-        elif "addq" in msg.content:
-            await addq(client, msg)
-        
-        elif "queue" in msg.content:
-            await queue(client, msg)
-
-        elif "clear" in msg.content:
-            await clear(client, msg)
-        
-        else:
-            embed=discord.Embed(title="Invalid Command.", description="Do =help for a list of commands.", color=0x06f459)
-            embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
-            await msg.channel.send(embed=embed)
 
         #logging commands n stuff ish
-        guild = client.get_guild(762718463575064636)
+    if msg.content.startswith("="):
         channel = client.get_channel(801262872955977729)
         embed=discord.Embed(title=str(msg.author), description=None, color=0x06f459)
         log_info = (str(msg.author) + " ran command " + str(msg.content) + " at " + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")))
@@ -327,7 +332,7 @@ async def on_member_join(member):
 #bot status + game
 @client.event
 async def on_ready():
-    guild = client.get_guild(762718463575064636)
+    
     channel = client.get_channel(801262872955977729)
     
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.watching, name="netflix! | type =help"))

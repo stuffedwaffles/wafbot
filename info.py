@@ -11,25 +11,57 @@ import random
 client = discord.Client()
 
 async def help(msg):
-    embed=discord.Embed(title="Waf Bot Help!", description="Waf Bot is a simple bot made for the le Kingdom SMP server.", color=0x06f459)
+    embed=discord.Embed(title="Waf Bot Help!", description="Waf Bot is a simple bot made for the le Kingdom SMP server. To see everything Waf Bot can do, check the github!", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/800783415137534012/Screenshot_2021-01-18_at_17.46.37.png")
-    embed.add_field(name="General Commands-", value="=ping, =dog, =cat, =waffle, =jedi, =ched, =para, =aqwuah, =destiny, =daky, =rps, =vantage, =hypickle, =rick, =roll. \n Also try asking for a joke!", inline=False)
-    embed.add_field(name="Server and Mod commands-", value="=help, =botinfo, =serverinfo, =user, =addrole, =delrole, =ip, =kick, =ban, =mute, =unm, =invite, =nick, =warn, =dm, =shutdown, =myid, =say", inline=False)
-    embed.add_field(name="Other-", value="Waf bot is coded in Python, for the code contact STUFFEDWAFFLES. The bot has a good amount of general fun commands, some basic moderator commands, and hopefully music queue and play commands soon! It can be added to multiple servers as well.")
+    embed.add_field(name="Fun commands-", value="`=help fun`", inline=False)
+    embed.add_field(name="Mod commands-", value="`=help mod`", inline=False)
+    embed.add_field(name="Server/info commands-", value="`=help info`", inline=False)
+    embed.add_field(name="Music commands-", value="`=help music`", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
-
     await msg.channel.send(embed=embed)
+
+async def helpfun(msg):
+    embed=discord.Embed(title="Waf Bot fun commands!", description="For other commands, do =help.", color=0x06f459)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/800783415137534012/Screenshot_2021-01-18_at_17.46.37.png")
+    embed.add_field(name="Twitch/YT channels!", value="=jedi, =ched, =destiny, =daky, =aqwuah", inline=False)
+    embed.add_field(name="Other-", value="=waffle, =para, =rickroll, =dog, =cat, =roll, =rps, =dm, ping", inline=False)
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
+    await msg.channel.send(embed=embed)
+
+async def helpmod(msg):
+    embed=discord.Embed(title="Waf Bot moderator commands!", description="For other commands, do =help.", color=0x06f459)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/800783415137534012/Screenshot_2021-01-18_at_17.46.37.png")
+    embed.add_field(name="Banning, Kicking, Muting-", value="=ban, =kick, =mute, =unmute, =warn", inline=False)
+    embed.add_field(name="Moderator only commands-", value="=say, =nick, =addrole, =delrole, =shutdown", inline=False)
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
+    await msg.channel.send(embed=embed)
+
+async def helpinfo(msg):
+    embed=discord.Embed(title="Waf Bot info commands!", description="For other commands, do =help.", color=0x06f459)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/800783415137534012/Screenshot_2021-01-18_at_17.46.37.png")
+    embed.add_field(name="Server info-", value="=serverinfo, =invite, =ip, =hypickle, =help", inline=False)
+    embed.add_field(name="User/bot info-", value="=user, =myid, =botinfo, =github", inline=False)
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
+    await msg.channel.send(embed=embed)
+
+async def helpmusic(msg):
+    embed=discord.Embed(title="Waf Bot music commands!", description="For other commands, do =help.", color=0x06f459)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/800783415137534012/Screenshot_2021-01-18_at_17.46.37.png")
+    embed.add_field(name="All Music Commands-", value="=join, =leave, =play, =pause, =resume, =url", inline=False)
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
+    await msg.channel.send(embed=embed)
+
 
 async def botinfo(msg):
     id = 783061816624021516
-    user = discord.Object(id)
     date = "Nov 3rd, 2020"
-    embed=discord.Embed(title="Waf Bot Info!", description="Do =help for a list of commands and more details on bot", color=0x06f459)
+    embed=discord.Embed(title="Waf Bot Info!", description="Do =help for a list of commands.", color=0x06f459)
     embed.add_field(name="Bot Command Prefix- ", value="=", inline=False)
     embed.add_field(name="Bot signed in as- ", value=str(f"<@{id}>"), inline=True)
     embed.add_field(name="Bot ID- ", value=str(id), inline=True)
     embed.add_field(name="Created by- ", value=str(f"<@{698707989531459595}>"), inline=False)
     embed.add_field(name="Created on- ", value=str(date), inline=True)
+    embed.add_field(name="Other info-", value="Waf Bot is coded in discord.py by STUFFEDWAFFLES. It can be added to multiple servers, however, it was mainly made for Le Kingdom.")
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/800783415137534012/Screenshot_2021-01-18_at_17.46.37.png")
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
 
@@ -103,8 +135,7 @@ async def ip(msg):
 async def hypickle(msg):
     await msg.channel.send("Hypixel IP- mc.hypixel.net \nAwesome PVP and Minigame server!")
 
-async def vantage(msg):
-    await msg.channel.send("MCVantage 1.16 server! IP- play.mcvantage.us, Discord-https://discord.gg/y4e26tfuZH \n`waf bot does not reccommend joining vantage or their discord as they suck and the only person ever on the server is david so yeah this is useless why would you even run this command what is wrong with you`")
+
 
 async def invite(msg):
     await msg.channel.send("Here is an invite to the server: https://discord.gg/aCY6qSA88h")
@@ -114,5 +145,7 @@ async def myid(msg):
     await msg.channel.send(msg.author.id)
     print (msg.author.id)
 
+async def github(msg):
+    await msg.channel.send("Here is Waf Bot's code- https://github.com/stuffedwaffles/wafbot")
 
 

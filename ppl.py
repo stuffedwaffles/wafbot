@@ -1,4 +1,8 @@
 import discord
+import asyncio
+from discord.utils import get
+
+client = discord.Client()
 
 async def waffle(msg):
     embed=discord.Embed(title="Waffle time!", url="https://belgian-waffle.recipes/make-perfect-stuffed-waffles/", description="How to make the perfect Belgian Stuffed Waffles! Click title for recipie!", color=0x9131f2)
@@ -29,6 +33,14 @@ async def ched(msg):
     
 async def rick(msg):
     await msg.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    channel = msg.author.voice.channel
+
+    if channel:
+        voice = get(client.voice_clients, guild=msg.channel.guild)
+    
+        voice.play(discord.FFmpegPCMAudio("/home/pi/waf bot/wafbot/Rick Astley - Never Gonna Give You Up (Video)-dQw4w9WgXcQ.webm"))
+        await asyncio.sleep(10)
+        voice.pause()
     
 async def destiny(msg):
     embed=discord.Embed(title="Destiny!", url=("https://www.twitch.tv/destinyd0424"), description="twitch channel! click title for link!", color=0xff24ba)
