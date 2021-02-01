@@ -1,0 +1,1 @@
+cd "/home/pi/waf bot/wafbot/"

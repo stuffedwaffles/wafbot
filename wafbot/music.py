@@ -1,0 +1,133 @@
+import discord
+from discord.utils import get
+from discord import Member
+from discord.ext import commands
+from discord.voice_client import VoiceClient
+import os
+from os import path
+import nacl
+import asyncio
+import records
+import random
+import youtube_dl
+from discord import FFmpegPCMAudio
+from youtube_dl import YoutubeDL
+import urllib.parse, urllib.request, re
+import wavelink
+intents = discord.Intents.default()
+client = discord.Client()
+
+song_queue = []
+FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True'}
+    
+
+
+def play_next(client, msg):
+    voice = get(client.voice_clients, guild=msg.guild)
+    if len(song_queue) > 1:
+        del song_queue[0]
+        voice.play(discord.FFmpegPCMAudio(song_queue[0][source], **FFMPEG_OPTIONS), after=lambda e: play_next(client, msg))
+        voice.is_playing()
+
+
+@client.event
+async def join(client, msg):
+    
+    channel = msg.author.voice.channel
+    await channel.connect()
+    await msg.channel.send("Bot joined `" + str(channel) + "`!")
+    await msg.add_reaction("👍")
+    
+
+
+async def leave(client, msg):
+    
+    channel = msg.author.voice.channel
+    
+    await msg.guild.voice_client.disconnect()
+    await msg.channel.send("Bot left `" + str(channel) + "`!")
+    await msg.add_reaction("👍")
+
+async def url(msg):
+    searchfrommsg = msg.content.split(" ")[1:]
+    search = str(searchfrommsg)
+    query_string = urllib.parse.urlencode({'search_query': search})
+    htm_content = urllib.request.urlopen(
+        'http://www.youtube.com/results?' + query_string)
+    search_results = re.findall(r'/watch\?v=(.{11})',
+                                htm_content.read().decode())
+    url = str('http://www.youtube.com/watch?v=' + search_results[0])
+    await msg.channel.send("Here is the first result to your search: " + url)
+   
+
+async def play(client, msg):
+    voice = discord.utils.get(client.voice_clients, guild=msg.channel.guild)
+    query1 = msg.content.split(" ")[1:]
+    
+    url1 = str(query1)
+    url2 = url1.strip('[')
+    url3 = url2.strip (']')
+    url4 = url3.replace("'", "")
+    song = str(url4)
+    print (song)
+    
+    if voice is None:
+        await msg.channel.send("Not in a vc!")
+
+    if voice.is_playing():
+        song_queue.append(song)
+        await msg.channel.send("Added to queue!")
+    else:
+        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+            ydl.download([song])
+        
+
+        for file in os.listdir("./"):
+            if file.endswith(".webm"):
+                os.rename(file, "song.webm")
+                voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: play_next(client, msg))
+                await msg.channel.send("Playing!")
+                await msg.add_reaction("👍")
+            
+                
+
+async def queue(msg):
+    
+    if song_queue == []:
+        await msg.channel.send("Nothing in queue!")
+    else:
+        await msg.channel.send(str(song_queue))
+
+async def pause(client, msg):
+    voice: discord.VoiceClient = discord.utils.get(client.voice_clients, guild=msg.author.guild)
+
+    voice.pause()
+    await msg.add_reaction("👍")
+
+
+async def resume(client, msg):
+    voice: discord.VoiceClient = discord.utils.get(client.voice_clients, guild=msg.author.guild)
+
+    voice.resume()
+    await msg.add_reaction("👍")
+
+async def clear(client, msg):
+    voice: discord.VoiceClient = discord.utils.get(client.voice_clients, guild=msg.author.guild)
+
+    voice.pause()
+    song_queue.clear()
+    await msg.add_reaction("👍")
+
+async def loop(client, msg):
+    voice = discord.utils.get(client.voice_clients, guild=msg.channel.guild)
+    guild = msg.guild
+    def repeat(guild, voice):
+        
+        voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, VoiceClient))
+        voice.is_playing()
+    if voice.is_playing() is False:
+        voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, voice))
+        await msg.channel.send("Looping song!")
+        await msg.add_reaction("👍")
+
