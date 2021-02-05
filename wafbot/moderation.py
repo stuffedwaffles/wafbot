@@ -40,6 +40,8 @@ async def banlist(msg):
     for ban in bans:
         await msg.channel.send("Name - `" + str(ban.user.name) + "`, ID - `" + str(ban.user.id) + "`")
 
+
+
 @client.event
 async def mute(msg):
     
@@ -54,6 +56,7 @@ async def mute(msg):
             
             role = discord.utils.get(msg.guild.roles, name='Muted')
             await user.add_roles(role)
+            await user.edit(voice_channel=None)
             await msg.channel.send(str(user) + " has been muted")
 
 async def unmute(msg):
@@ -96,9 +99,7 @@ async def warn(msg):
 
 async def shutdown(client, msg):
     
-    if discord.utils.get(msg.author.roles, name="Head Admin") is None:
-        await msg.channel.send("You can't do that.")
-    else:
+    if msg.author.id == 698707989531459595:
         await msg.channel.send(msg.author.mention + ", how could you do this?", delete_after=0.5) 
         await asyncio.sleep(1)
         await msg.channel.send("Shutting down...", delete_after=0.2)
@@ -112,11 +113,21 @@ async def yeet(msg):
     if discord.utils.get(msg.author.roles, name="Head Admin") is None:
         await msg.channel.send("You can't do that.")
     else:
-        llimit = msg.content.split(" ")[1]
-        await msg.channel.purge(limit=int(llimit))
-        await msg.channel.send("Chat cleared by " + msg.author.display_name, delete_after=2.0)
+        if msg.mentions:
+            for user in msg.mentions:
+                me = []
+                async for m in msg.channel.history():
         
-        await asyncio.sleep(5.0)
+                    if m.author == user:
+                        me.append(m)
+                        await msg.channel.delete_messages(me)
+                        await msg.channel.send("All messages by " + user.mention + " have been deleted.")
+        else:
+            llimit = msg.content.split(" ")[1]
+            await msg.channel.purge(limit=int(llimit))
+            await msg.channel.send("Chat cleared by " + msg.author.display_name, delete_after=2.0) 
+
+            
         
 
 

@@ -1,5 +1,29 @@
 import discord
+from discord.utils import get
+from discord import Member
+from discord.ext import commands
+from discord.voice_client import VoiceClient
+import os
+from os import path
+import nacl
+import asyncio
+import records
 import random
+import youtube_dl
+from gamesnstuff import *
+from info import *
+from ppl import *
+from moderation import *
+from music import *
+import logging
+import json
+from discord import FFmpegPCMAudio
+from youtube_dl import YoutubeDL
+import urllib.parse, urllib.request, re
+import wavelink
+import requests
+
+@client.event
 #rps, joke, cat, dog
 async def rps(msg):
     r = "rock"
@@ -35,6 +59,7 @@ async def rps(msg):
     elif (rand == s and user_choice =="scissors"):
         await msg.channel.send("Its a tie!")       
 
+@client.event
 async def joke(msg):
     j1 = "Why are fish so smart? \n ||Because they live in schools!||"
     j2 = "Where do polar bears keep their money? \n ||In a snow bank!||"
@@ -49,6 +74,7 @@ async def joke(msg):
     jokelist = [j1,j2,j3,j4,j5,j6,j7,j8,j9,j10]
     await msg.channel.send(random.choice(jokelist))
 
+@client.event
 async def cat(msg):
     l1 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffilmdaily.co%2Fwp-content%2Fuploads%2F2020%2F04%2Fcat-play-lede-1300x867.jpg&f=1&nofb=1"
     l2 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpeopledotcom.files.wordpress.com%2F2018%2F02%2Ftwo-tone-cat.jpg"
@@ -66,6 +92,7 @@ async def cat(msg):
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
     await msg.channel.send(embed=embed)
 
+@client.event
 async def dog(msg):
     l1 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F1.bp.blogspot.com%2F-1uQRYMklACU%2FToQ6aL-5uUI%2FAAAAAAAAAgQ%2F9_u0922cL14%2Fs1600%2Fcute-puppy-dog-wallpapers.jpg"
     l2 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F3.bp.blogspot.com%2F-1fRaPu5_U9s%2FUWLerAZHutI%2FAAAAAAAAhbY%2FOQzHm7uEijg%2Fs1600%2Fcute-dog-pictures-016.jpg"
@@ -85,12 +112,13 @@ async def dog(msg):
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
     await msg.channel.send(embed=embed)   
 
-
+@client.event
 async def roll(msg):
     numb2 = msg.content.split(" ")[1]
     roll = random.randint(1,int(numb2))
     await msg.channel.send("Bot rolled a dice! \nResult: " + str(roll))
 
+@client.event
 async def dm(msg):
     dmdm = msg.content.split(" ")[2:]
     dms = ''.join(dmdm)
@@ -98,15 +126,98 @@ async def dm(msg):
         await user.send(str(dms))
         await msg.channel.send(user.mention + "has been dmed.")
 
+@client.event
 async def say(msg):
     words = msg.content
     wordss = words.replace("=say", "")
     await msg.delete()
     await msg.channel.send(str(wordss))
 
+@client.event
 async def afk(msg):
     member = msg.author
     role = discord.utils.get(msg.guild.roles , name='afk')
+    reasonn = msg.content
+    reason = reasonn.replace("=afk ", "")
     if role not in member.roles:
         await member.add_roles(role)
-        await msg.channel.send(member.mention + ", you are now AFK.")
+        await msg.channel.send(member.mention + ", you are now AFK- " + reason)
+
+@client.event
+async def google(msg):
+
+    quer =  msg.content
+    query = quer.replace("=google ", "")
+
+    try: 
+        from googlesearch import search 
+    except ImportError:  
+        await msg.channel.send("No module named 'google' found") 
+
+
+    for j in search(query, tld="co.in", num=1, stop=1, pause=2): 
+        await msg.channel.send(j) 
+
+@client.event
+async def poll(msg):
+
+    pol = msg.content
+    poll = pol.replace("=poll ", "")
+    
+    
+    
+    await msg.delete()
+    
+    react = await msg.channel.send("@everyone" + poll)
+    await react.add_reaction("🇾")
+    await react.add_reaction("🇳")
+
+@client.event
+async def flip(msg):
+    number = random.randint(1,2)
+    if number == 1:
+        flipp = "Heads!"
+
+    if number == 2:
+        flipp = "Tails!"
+
+    await msg.channel.send(str(flipp))
+
+
+
+
+@client.event
+async def smite(msg):
+    if msg.author.id == 698707989531459595:
+        if msg.mentions:
+            for user in msg.mentions:
+                await msg.channel.send(user.mention + " has been smited by waffles!")
+
+async def uselesscommand(msg):
+    if msg.author.id == 698707989531459595:
+        await msg.channel.send("That command did nothing!")
+
+async def announce(msg):
+    if msg.author.id == 698707989531459595:
+        channel = client.get_channel(762718464124125226)
+        announcee = msg.content
+        announcement = announcee.replace("=announce", "")
+        await msg.channel.send(announcement + "\n@everyone")
+        await msg.delete()
+
+async def bigletters(msg):
+    if msg.author.id == 698707989531459595:
+        letter = msg.content
+        letters = letter.replace("=bigletters ", "")
+        dictt = {'a':':regional_indicator_a:','b':':regional_indicator_b:','c':':regional_indicator_c:','d':':regional_indicator_d:','e':':regional_indicator_e:','f':':regional_indicator_f:','g':':regional_indicator_g:','h':':regional_indicator_h:',
+        'i':':regional_indicator_i:','j':':regional_indicator_j:','k':':regional_indicator_k:','l':':regional_indicator_l:','m':':regional_indicator_m:','n':':regional_indicator_n:','o':':regional_indicator_o:','p':':regional_indicator_p:','q':':regional_indicator_q:',
+        'r':':regional_indicator_r:','s':':regional_indicator_s:','t':':regional_indicator_t:','u':':regional_indicator_u:','v':':regional_indicator_v:','w':':regional_indicator_w:','x':':regional_indicator_x:','y':':regional_indicator_y:','z':':regional_indicator_z:', ' ':' '
+        }
+        arr = []
+        for i in list(letters):
+            for k, j in dictt.items():
+                if k == i:
+                    arr.append(j)
+        await msg.channel.send(' '.join(arr))
+        await msg.delete()
+        

@@ -14,7 +14,12 @@ from youtube_dl import YoutubeDL
 import urllib.parse, urllib.request, re
 import wavelink
 intents = discord.Intents.default()
-client = discord.Client()
+
+
+#define the bot
+client = discord.Client(intents=intents)
+
+
 
 song_queue = []
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
@@ -27,6 +32,7 @@ song_queue = []
 client = discord.Client(intents=intents)
 bot = commands.Bot
 
+@client.event
 async def on_message(msg):
     #language filter
     if msg.content.lower() in ["fuck", "shit"]:
@@ -57,7 +63,7 @@ def search(arg):
         
     return {'source': info['formats'][0]['url'], 'title': info['title']}
     
-@client.event
+
 async def on_message(ctx, msg)
     query1 = msg.content.split(" ")[1:]
     

@@ -81,11 +81,12 @@ async def on_message(msg):
         
    
         
-    if msg.content.startswith("how are you waf bot?"):
+    if msg.content.startswith("how are you waf bot"):
         r = "I'm doing great thanks for asking"
-        r1 = "I'm high!"
+        r1 = "I'm drunk again!"
         r3 = "why do you care?"
         r4 = "I'm doing just fine."
+        r5 = "im doin pretty good, how are you"
         res = [r,r1,r3,r4]
         await msg.channel.send(random.choice(res))
     
@@ -259,6 +260,15 @@ async def on_message(msg):
 
         if "=afk" in msg.content:
             await afk(msg)
+        
+        if "=google" in msg.content:
+            await google(msg)
+        
+        if "=poll" in msg.content:
+            await poll(msg)
+        
+        if "=flip" in msg.content:
+            await flip(msg)
 
             #mod commands
         if "=kick" in msg.content:
@@ -296,6 +306,8 @@ async def on_message(msg):
         
         if "=yeet" in msg.content:
             await yeet(msg)
+        
+        
 
         # music
         if "=join" in msg.content:
@@ -313,8 +325,8 @@ async def on_message(msg):
         if "=resume" in msg.content:
             await resume(client, msg)
         
-        if "=url" in msg.content:
-            await url(msg)
+        if "=video" in msg.content:
+            await video(msg)
 
         if "=queue" in msg.content:
             await queue(msg)
@@ -325,7 +337,22 @@ async def on_message(msg):
         if "=loop" in msg.content:
             await loop(client, msg)
         
+        if "=remove" in msg.content:
+            await remove(client, msg)
         
+        
+
+        if "=smite" in msg.content:
+            await smite(msg)
+        
+        if "=command" in msg.content:
+            await uselesscommand(msg)
+        
+        if "=announce" in msg.content:
+            await announce(msg)
+        
+        if "=bigletters" in msg.content:
+            await bigletters(msg)
         
 
         #logging commands n stuff ish

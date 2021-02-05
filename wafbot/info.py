@@ -24,7 +24,7 @@ async def helpfun(msg):
     embed=discord.Embed(title="Waf Bot fun commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
     embed.add_field(name="Twitch/YT channels!", value="`=jedi` - info about Jedi \n`=ched` - info about ched \n`=destiny` - info about destiny \n`=daky` - info about dak \n`=aqwuah` - info about aqwuah", inline=False)
-    embed.add_field(name="Other-", value="`=waffle` - waffles! \n`=para` - para! \n`=rickroll` - rickroll people \n`=dog` - get a doggo pic! \n`=cat` - get a catto pic! \n`=roll` - roll a die \n`=rps` - play rock, paper, scissors with the bot \n`=dm` - dm a user \n`ping` - get a response and client latency \n`=afk` - set an afk status to let others know you are afk", inline=False)
+    embed.add_field(name="Other-", value="`=waffle` - waffles! \n`=para` - para! \n`=rickroll` - rickroll people \n`=dog` - get a doggo pic! \n`=cat` - get a catto pic! \n`=google` - get a google result for a query \n`=poll` - start a poll(only use in the poll channel) \n`=roll` - roll a die \n`=flip` - flip a coin! \n`=rps` - play rock, paper, scissors with the bot \n`=dm` - dm a user \n`ping` - get a response and client latency \n`=afk` - set an afk status to let others know you are afk", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -32,7 +32,7 @@ async def helpmod(msg):
     embed=discord.Embed(title="Waf Bot moderator commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
     embed.add_field(name="Banning, Kicking, Muting-", value="`=ban` - ban a user \n`=blist` - get a list of banned users \n`=kick` - kick a user \n`=mute` - mute a user \n`=unmute` - unmute a user \n`=warn` - warn a user", inline=False)
-    embed.add_field(name="Moderator only commands-", value="`=say` - make the bot say something \n`=nick` - give a user a nickname \n`=addrole` - add a role to a user \n`=delrole` - remove a role from a user \n`=shutdown` - shut the bot down if needed \n`=yeet` - clear a certain number of messages from a chat", inline=False)
+    embed.add_field(name="Moderator only commands-", value="`=say` - make the bot say something \n`=nick` - give a user a nickname \n`=addrole` - add a role to a user \n`=delrole` - remove a role from a user \n`=shutdown` - shut the bot down if needed \n`=yeet` - clear messages from a user or a certain number of messages", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -47,7 +47,7 @@ async def helpinfo(msg):
 async def helpmusic(msg):
     embed=discord.Embed(title="Waf Bot music commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
-    embed.add_field(name="All Music Commands-", value="`=join` - makes the bot join a vc and rickroll you for 10 seconds \n`=leave` - makes the bot leave vc \n`=play` - plays a song(currently doesnt work) \n`=pause` - pause the currently playing song \n`=resume` - resume the currently playing song \n`=url` - get a video link from a query \n`=queue` - get the list of songs in the queue \n`=clear` - clear the queue", inline=False)
+    embed.add_field(name="All Music Commands-", value="`=join` - makes the bot join a vc and rickroll you for 10 seconds \n`=leave` - makes the bot leave vc \n`=play` - plays a song \n`=pause` - pause the currently playing song \n`=resume` - resume the currently playing song \n`=video` - get a video link from a query \n`=queue` - get the list of songs in the queue \n`=clear` - clear the queue \n`=remove` - remove a song from the queue", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -137,6 +137,7 @@ async def hypickle(msg):
 
 
 async def invite(msg):
+    
     await msg.channel.send("Here is an invite to the server: https://discord.gg/aCY6qSA88h")
     
 
