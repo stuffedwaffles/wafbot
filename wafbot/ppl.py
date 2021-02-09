@@ -1,7 +1,8 @@
+#twitch channels n stuff, custom user commands
 import discord
 import asyncio
 from discord.utils import get
-
+import praw 
 client = discord.Client()
 
 async def waffle(msg):
@@ -12,8 +13,9 @@ async def waffle(msg):
     await msg.channel.send(embed=embed)
     
 async def jedi(msg):
-    embed=discord.Embed(title="Jedi_JoeYT's youtube channel!", url="https://www.youtube.com/channel/UCmzcr6ouQa8RvzV2vEP0HfA", description="(UNSOUPSCRIBE FOR FREE COOKIE)", color=0xe31c30)
-    embed.set_thumbnail(url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.hdwallpapers.in%2Fdownload%2Fbaby_yoda_tv_show_baby_4k_hd-HD.jpg&f=1&nofb=1")
+    embed=discord.Embed(title="Jedi_JoeYT's youtube channel!", description="(UNSOUPSCRIBE FOR FREE COOKIE)", color=0xe31c30)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/avatars/727612091187462244/9ad60611152439dd8c4a08e8e93b0bf9.webp?size=256")
+    embed.add_field(name="Channel- ", value="https://www.youtube.com/channel/UCmzcr6ouQa8RvzV2vEP0HfA", inline=False)
     embed.set_footer(text="Contact Jedi_JoeYT7387 for cookie")
     await msg.channel.send(embed=embed)
 
@@ -32,15 +34,10 @@ async def ched(msg):
     await msg.channel.send(embed=embed)
     
 async def rick(msg):
-    await msg.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-    channel = msg.author.voice.channel
-
-    if channel:
-        voice = get(client.voice_clients, guild=msg.channel.guild)
+    await msg.delete()
+    await msg.channel.send(file=discord.File('rick.gif'))
     
-        voice.play(discord.FFmpegPCMAudio("/home/pi/waf bot/wafbot/Rick Astley - Never Gonna Give You Up (Video)-dQw4w9WgXcQ.webm"))
-        await asyncio.sleep(10)
-        voice.pause()
+   
     
 async def destiny(msg):
     embed=discord.Embed(title="Destiny!", url=("https://www.twitch.tv/destinyd0424"), description="twitch channel! click title for link!", color=0xff24ba)

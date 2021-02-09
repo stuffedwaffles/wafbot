@@ -1,3 +1,4 @@
+#music/voice channel cmds
 import discord
 from discord.utils import get
 from discord import Member
@@ -17,7 +18,7 @@ import wavelink
 import swaglyrics
 import re
 import aiohttp
-
+import praw 
 
 intents = discord.Intents.default()
 client = discord.Client()
@@ -80,6 +81,7 @@ async def play(client, msg):
     
     print (song)
     title = searchfrommsg
+    song_queue.append(song)
 
     if voice.is_paused():
         voice.resume()
@@ -88,7 +90,6 @@ async def play(client, msg):
         await msg.channel.send("Not in a vc!")
 
     if voice.is_playing():
-        song_queue.append(song)
         await msg.channel.send("Added to queue!")
     else:
         with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
@@ -129,7 +130,7 @@ async def resume(client, msg):
 async def clear(client, msg):
     voice: discord.VoiceClient = discord.utils.get(client.voice_clients, guild=msg.author.guild)
 
-    voice.pause()
+    
     song_queue.clear()
     await msg.add_reaction("👍")
 
@@ -148,7 +149,8 @@ async def loop(client, msg):
 async def remove(client, msg):
     
     indexx = msg.content.split(" ")[1]
-    index = int(indexx)
+    sum = float(indexx) + float(1)
+    index = int(sum)
     del song_queue[index]
     await msg.channel.send("Removed song!")
     await msg.add_reaction("👍")

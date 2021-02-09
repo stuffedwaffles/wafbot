@@ -1,4 +1,4 @@
-#copy bot info, server info, user, stuff like that here
+#bot info, serverinfo, help, etc
 import discord
 from discord.utils import get
 from discord import Member
@@ -7,6 +7,7 @@ import os
 import youtube_dl
 from discord.voice_client import VoiceClient
 import random
+import praw 
 
 client = discord.Client()
 
@@ -24,7 +25,7 @@ async def helpfun(msg):
     embed=discord.Embed(title="Waf Bot fun commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
     embed.add_field(name="Twitch/YT channels!", value="`=jedi` - info about Jedi \n`=ched` - info about ched \n`=destiny` - info about destiny \n`=daky` - info about dak \n`=aqwuah` - info about aqwuah", inline=False)
-    embed.add_field(name="Other-", value="`=waffle` - waffles! \n`=para` - para! \n`=rickroll` - rickroll people \n`=dog` - get a doggo pic! \n`=cat` - get a catto pic! \n`=google` - get a google result for a query \n`=poll` - start a poll(only use in the poll channel) \n`=roll` - roll a die \n`=flip` - flip a coin! \n`=rps` - play rock, paper, scissors with the bot \n`=dm` - dm a user \n`ping` - get a response and client latency \n`=afk` - set an afk status to let others know you are afk", inline=False)
+    embed.add_field(name="Other-", value="`=waffle` - waffles! \n`=para` - para! \n`=rickroll` - rickroll people \n`=dog` - get a doggo pic! \n`=cat` - get a catto pic! \n`=meme` - get a random meme from reddit \n`=horror` - get a horror meme \n`=wholesome` - get a random wholesome image or meme \n`=aww` - get an image of a cute animal from reddit! \n`=st` - get a random shower thought to think about \n`=nsfw` - get a nsfw image(PLEASE DONT USE IF YOU ARE UNDER 14 OR USE AT YOUR OWN RISK)\n`=google` - get a google result for a query \n`=poll` - start a poll(only use in the poll channel) \n`=roll` - roll a die \n`=flip` - flip a coin! \n`=rps` - play rock, paper, scissors with the bot \n`=rr` - play some russian roulette\n`=kill` - kill a user \n`=dm` - dm a user \n`ping` - get a response and client latency \n`=afk` - set an afk status to let others know you are afk", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -32,7 +33,7 @@ async def helpmod(msg):
     embed=discord.Embed(title="Waf Bot moderator commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
     embed.add_field(name="Banning, Kicking, Muting-", value="`=ban` - ban a user \n`=blist` - get a list of banned users \n`=kick` - kick a user \n`=mute` - mute a user \n`=unmute` - unmute a user \n`=warn` - warn a user", inline=False)
-    embed.add_field(name="Moderator only commands-", value="`=say` - make the bot say something \n`=nick` - give a user a nickname \n`=addrole` - add a role to a user \n`=delrole` - remove a role from a user \n`=shutdown` - shut the bot down if needed \n`=yeet` - clear messages from a user or a certain number of messages", inline=False)
+    embed.add_field(name="Moderator only commands-", value="`=say` - make the bot say something \n`=nick` - give a user a nickname \n`=addrole` - add a role to a user \n`=delrole` - remove a role from a user \n`=shutdown` - shut the bot down if needed \n`=yeet` - clear messages from a user or a certain number of messages \n`=channeladd` - add a channel with a specified name and type \n`=roleadd` - create a role with a specified name ", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -71,13 +72,13 @@ async def users(msg):
     for user in msg.mentions:
         id = user.id
         avatar = user.avatar_url
-        date = user.created_at
+        date = user.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")
         usersnick = user.display_name
         if user.bot == True:
             bot = "Yes."
         elif user.bot == False:
             bot = "No."
-        embed=discord.Embed(title="User- " + str(user), description="User ID- " + str(id), color=0x06f459)
+        embed=discord.Embed(title="User- " + str(user.mention), description="User ID- " + str(id), color=0x06f459)
         embed.set_author(name=str(user))
         embed.add_field(name="Account Created", value="Created- " + str(date), inline=False)
         embed.add_field(name="Bot? ", value=str(bot), inline=True)
@@ -89,7 +90,7 @@ async def users(msg):
         user = msg.author
         id = msg.author.id
         avatar = (user.avatar_url)
-        date = user.created_at
+        date = user.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")
         usersnick = user.display_name
         if user.bot == True:
             bot = "Yes."
@@ -146,6 +147,6 @@ async def myid(msg):
     print (msg.author.id)
 
 async def github(msg):
-    await msg.channel.send("Here is Waf Bot's code- https://github.com/stuffedwaffles/wafbot")
+    await msg.channel.send("Here is Waf Bot's code- https://github.com/stuffedwaffles/wafbot/tree/master")
 
 

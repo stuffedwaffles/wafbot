@@ -1,9 +1,10 @@
+#moderation commands
 import discord
 from discord.utils import get
 from discord import Member
 from discord.ext import commands
 import asyncio
-
+import praw 
 
 client = discord.Client()
 #mod commands
@@ -100,8 +101,12 @@ async def warn(msg):
 async def shutdown(client, msg):
     
     if msg.author.id == 698707989531459595:
+        async with msg.channel.typing():
+                await asyncio.sleep(2)
         await msg.channel.send(msg.author.mention + ", how could you do this?", delete_after=0.5) 
         await asyncio.sleep(1)
+        async with msg.channel.typing():
+                await asyncio.sleep(1)
         await msg.channel.send("Shutting down...", delete_after=0.2)
         await asyncio.sleep(0.5)
         await msg.delete()
@@ -127,10 +132,26 @@ async def yeet(msg):
             await msg.channel.purge(limit=int(llimit))
             await msg.channel.send("Chat cleared by " + msg.author.display_name, delete_after=2.0) 
 
-            
-        
+async def channeladd(msg):
+    if discord.utils.get(msg.author.roles, name="Head Admin") is None:
+        await msg.channel.send("You can't do that.")
+    else:        
+        channelname = msg.content.split(" ")[1]
+        channeltype = msg.content.split(" ")[2]
+        if str(channeltype) == "voice":
+            channel = await msg.guild.create_voice_channel(str(channelname))
+            await msg.channel.send("Voice Channel- `" + str(channel) + "` has been created.")
+        if str(channeltype) == "text":
+            channel = await msg.guild.create_text_channel(str(channelname))
+            await msg.channel.send("Text Channel- `" + str(channel) + "` has been created.")
 
-
+async def roleadd(msg):
+    if discord.utils.get(msg.author.roles, name="Head Admin") is None:
+        await msg.channel.send("You can't do that.")
+    else:
+        rolename = msg.content.split(" ")[1]
+        await msg.guild.create_role(name=str(rolename))
+        await msg.channel.send("Role " + str(rolename) + " has been created.")
 
 async def addrole(msg):
     

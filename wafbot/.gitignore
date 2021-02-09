@@ -1,6 +1,11 @@
 # super secret bot token and etc
 secrets.json
-log.txt
+discord.log
+song.webm
+get_in_repo.sh
+rick.gif
+thing.py
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

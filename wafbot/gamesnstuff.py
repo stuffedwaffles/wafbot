@@ -1,3 +1,4 @@
+#games/memes
 import discord
 from discord.utils import get
 from discord import Member
@@ -22,6 +23,8 @@ from youtube_dl import YoutubeDL
 import urllib.parse, urllib.request, re
 import wavelink
 import requests
+
+client = discord.Client()
 
 @client.event
 #rps, joke, cat, dog
@@ -76,41 +79,63 @@ async def joke(msg):
 
 @client.event
 async def cat(msg):
-    l1 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffilmdaily.co%2Fwp-content%2Fuploads%2F2020%2F04%2Fcat-play-lede-1300x867.jpg&f=1&nofb=1"
-    l2 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpeopledotcom.files.wordpress.com%2F2018%2F02%2Ftwo-tone-cat.jpg"
-    l3 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.hdwallpaper.nu%2Fwp-content%2Fuploads%2F2017%2F04%2Fcat-11.jpg&f=1&nofb=1"
-    l4 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fi.huffpost.com%2Fgen%2F1486888%2Fimages%2Fo-GRUMPY-CAT-facebook.jpg"
-    l5 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.purrform.co.uk%2Fwp-content%2Fuploads%2F2016%2F09%2Fcat-tonges.jpg"
-    l6 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.hellogiggles.com%2Fuploads%2F2016%2F02%2F27012831%2Fflickr-cat.jpg"
-    l7 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd.newsweek.com%2Fen%2Ffull%2F1541596%2Fcat-generic.jpg"
-    l8 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.sciencenews.org%2Fwp-content%2Fuploads%2F2020%2F08%2F080720_eg_cat-covid_feat.jpg"
-    l9 = "https://vethelpdirect.com/wordpress/wp-content/uploads/2019/09/cat-3620161_1920.jpg"
-    catlinks = [l1,l2,l3,l4,l5,l6,l7,l8,l9]
-    cat = random.choice(catlinks)
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/catpictures/new.json?sort=hot') as r:
+            res = await r.json()
     embed=discord.Embed(title="MEOW!", color=0x06f459)
-    embed.set_image(url=cat)
+    embed.set_image(url=(res['data']['children'] [random.randint(0, 25)]['data']['url']))
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
     await msg.channel.send(embed=embed)
 
 @client.event
 async def dog(msg):
-    l1 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F1.bp.blogspot.com%2F-1uQRYMklACU%2FToQ6aL-5uUI%2FAAAAAAAAAgQ%2F9_u0922cL14%2Fs1600%2Fcute-puppy-dog-wallpapers.jpg"
-    l2 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F3.bp.blogspot.com%2F-1fRaPu5_U9s%2FUWLerAZHutI%2FAAAAAAAAhbY%2FOQzHm7uEijg%2Fs1600%2Fcute-dog-pictures-016.jpg"
-    l3 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pixelstalk.net%2Fwp-content%2Fuploads%2F2016%2F08%2F2560x1600-Funny-Dog-Wallpaper-1.jpg"
-    l4 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F2.bp.blogspot.com%2F-vB-YclIA1bM%2FUU9BOJ12MiI%2FAAAAAAAAg4A%2F2hKr5DeLF80%2Fs1600%2Fcute-puppy-pictures-025.jpg"
-    l5 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.rover.com%2Fblog%2Fwp-content%2Fuploads%2F2015%2F04%2Fboo-pomeranian.jpg"
-    l6 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.dog-learn.com%2Fdog-breeds%2Fmaltese%2Fimages%2Fmaltese-u3.jpg"
-    l7 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fbarkpost.com%2Fwp-content%2Fuploads%2F2014%2F07%2Fpuppy_dog_eyes_cute.jpg"
-    l8 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwhyy.org%2Fwp-content%2Fuploads%2F2018%2F12%2Fpet_show_stern_dog_2100.jpg"
-    l9 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pixelstalk.net%2Fwp-content%2Fuploads%2F2016%2F04%2FGolden-retriever-dogs-high-definition-wallpapers.jpg"
-    l10 = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FWOq7n3nDqWI%2Fmaxresdefault.jpg"
-    l11 = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fr.ddmcdn.com%2Fs_f%2Fo_1%2Fw_1024%2Fh_681%2FAPL%2Fuploads%2F2013%2F06%2FActiveDogBenefits.jpg&f=1&nofb=1"
-    doglinks = [l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11]
-    dog = random.choice(doglinks)
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/dogpictures/new.json?sort=hot') as r:
+            res = await r.json()
     embed=discord.Embed(title="WOOF!", color=0x06f459)
-    embed.set_image(url=dog)
+    embed.set_image(url=(res['data']['children'] [random.randint(0, 25)]['data']['url']))
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
-    await msg.channel.send(embed=embed)   
+    await msg.channel.send(embed=embed)  
+
+@client.event
+async def aww(msg):
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/aww/new.json?sort=hot') as r:
+            res = await r.json()
+    embed=discord.Embed(title="AWWW!", color=0x06f459)
+    embed.set_image(url=(res['data']['children'] [random.randint(0, 25)]['data']['url']))
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
+    await msg.channel.send(embed=embed)  
+
+@client.event
+async def horror(msg):
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/horrormemes/new.json?sort=hot') as r:
+            res = await r.json()
+    embed=discord.Embed(title="Enjoy some horror memes from reddit", color=0x06f459)
+    embed.set_image(url=(res['data']['children'] [random.randint(0, 25)]['data']['url']))
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
+    await msg.channel.send(embed=embed) 
+
+@client.event
+async def thoughts(msg):
+     async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/Showerthoughts/new.json?sort=hot') as r:
+            res = await r.json()
+        embed=discord.Embed(title="Heres a thought", description=(res['data']['children'] [random.randint(0, 25)]['data']['url']), color=0x06f459)
+        embed.set_image(url=(res['data']['children'] [random.randint(0, 25)]['data']['url']))
+        embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
+        await msg.channel.send(embed=embed)
+
+@client.event
+async def wholesome(msg):
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/wholesome/new.json?sort=hot') as r:
+            res = await r.json()
+    embed=discord.Embed(title="WHOLESOME IMAGES :D", color=0x06f459)
+    embed.set_image(url=(res['data']['children'] [random.randint(0, 25)]['data']['url']))
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
+    await msg.channel.send(embed=embed) 
 
 @client.event
 async def roll(msg):
@@ -176,15 +201,56 @@ async def poll(msg):
 async def flip(msg):
     number = random.randint(1,2)
     if number == 1:
-        flipp = "Heads!"
+        flipp = "🪙Heads!🪙"
 
     if number == 2:
-        flipp = "Tails!"
+        flipp = "🪙Tails!🪙"
 
     await msg.channel.send(str(flipp))
 
+@client.event
+async def meme(msg):
+    embed=discord.Embed(title="Heres a meme!", color=0x06f459)
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=hot') as r:
+            res = await r.json()
+            embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
+            embed.set_footer(text="Contact STUFFEDWAFFLES for more info on bot")
+            await msg.channel.send(embed=embed)
 
+@client.event
+async def cursed(msg):
+    embed=discord.Embed(title="Cursed images!", color=0x06f459)
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/blursedimages/new.json?sort=hot') as r:
+            res = await r.json()
+            embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
+            embed.set_footer(text="Contact STUFFEDWAFFLES for more info on bot")
+            await msg.channel.send(embed=embed)
 
+async def russianroulette(msg):
+    number = random.randint(1,6)
+    if number == 6:
+        await msg.channel.send(str(msg.author.mention) + " was shot! Better luck next time! Oh wait, there wont be a next time-")
+    else:
+        await msg.channel.send("Good job " + str(msg.author.mention) + ", you survived!")
+
+@client.event
+async def kill(msg):
+    for user in msg.mentions:
+        c = str(user.mention) + " was told to do a backflip off a building by " + str(msg.author.mention)
+        c1 = str(user.mention) + " was choked too hard by " + str(msg.author.mention)
+        c2 = str(user.mention) + " annoyed " + str(msg.author.mention) + " and was stabbed to death."
+        c3 = str(user.mention) + " was shot by " + str(msg.author.mention) + " with a frozen chicken."
+        c4 = str(msg.author.mention) + " directed a wrecking ball towards " + str(user.mention) + "'s house."
+        c5 = str(msg.author.mention) + " shoved " + str(user.mention) + " from their ego level to their IQ level."
+        c6 = str(msg.author.mention) + " threw " + str(user.mention) + " into a snake pit."
+        c7 = str(user.mention) + " was smashed too hard by " + str(msg.author.mention)
+        c8 = str(user.mention) + " got thrown into a volcano by " + str(msg.author.mention) 
+        c9 = str(msg.author.mention) + " threw an exploding kitten at " + str(user.mention)
+        c10 = str(user.mention) + " attempted to attack " + str(msg.author.mention) + " and failed."
+        clist = [c, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10]
+        await msg.channel.send(random.choice(clist))
 
 @client.event
 async def smite(msg):
@@ -220,4 +286,6 @@ async def bigletters(msg):
                     arr.append(j)
         await msg.channel.send(' '.join(arr))
         await msg.delete()
+
+
         

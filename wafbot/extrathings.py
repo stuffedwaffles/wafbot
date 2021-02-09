@@ -111,3 +111,30 @@ for file in os.listdir("./"):
 voice.play(discord.FFmpegPCMAudio("/home/pi/waf bot/wafbot/Thomas the Tank Engine (EAR RAPE) (BASS BOOSTED) (DISTORTED)-agxG5K38g1c.webm"))
 await msg.add_reaction("👍")
     
+
+
+
+
+
+
+
+
+
+    async def command_logger(content):  
+    f = open(os.getcwd()+"/log.txt", "w+")
+    f.write(content + "\n")
+    f.close() 
+    await command_logger(log_info)
+
+    if msg.content.startswith("="):
+        channel = client.get_channel(801262872955977729)
+        embed=discord.Embed(title=str(msg.author), description=None, color=0x06f459)
+        log_info = (str(msg.author) + " ran command " + str(msg.content) + " at " + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")))
+        embed.add_field(name="ran a command in " + str(msg.channel), value="`" + str(msg.content) + "` at " + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")))
+        embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
+        await channel.send(embed=embed)
+
+
+
+        if msg.content.startswith("="):
+        thing = str(msg.author) + " ran command " + str(msg.content) + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p") + " in " + str(msg.channel)
