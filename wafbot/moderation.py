@@ -54,10 +54,11 @@ async def mute(msg):
         
     else:
         for user in msg.mentions:
-            
+            voice = get(client.voice_clients, guild=msg.guild)
             role = discord.utils.get(msg.guild.roles, name='Muted')
             await user.add_roles(role)
-            await user.edit(voice_channel=None)
+            if voice == True:
+                await user.edit(mute=True, deafen=True)
             await msg.channel.send(str(user) + " has been muted")
 
 async def unmute(msg):
@@ -72,7 +73,13 @@ async def unmute(msg):
             
             role = discord.utils.get(msg.guild.roles, name='Muted')
             await user.remove_roles(role)
+            await user.edit(mute=False, deafen=False)
             await msg.channel.send(str(user) + " has been unmuted")
+
+async def voicekick(client, msg):
+    for user in msg.mentions:
+        await user.edit(voice_channel=None)
+        await msg.channel.send(f"{user.mention} has been kicked from voice.")
 
 async def nick(msg):
     
@@ -103,14 +110,10 @@ async def shutdown(client, msg):
     if msg.author.id == 698707989531459595:
         async with msg.channel.typing():
                 await asyncio.sleep(2)
-        await msg.channel.send(msg.author.mention + ", how could you do this?", delete_after=0.5) 
-        await asyncio.sleep(1)
-        async with msg.channel.typing():
-                await asyncio.sleep(1)
-        await msg.channel.send("Shutting down...", delete_after=0.2)
-        await asyncio.sleep(0.5)
+        await msg.channel.send("Shutting down...", delete_after=1)
+        await asyncio.sleep(2)
         await msg.delete()
-        await client.get_channel(801262872955977729).send("Bot has been shutdown!")
+        
         await client.logout()
         print ("Bot shutdown")
 
@@ -118,6 +121,7 @@ async def yeet(msg):
     if discord.utils.get(msg.author.roles, name="Head Admin") is None:
         await msg.channel.send("You can't do that.")
     else:
+        await msg.delete()
         if msg.mentions:
             for user in msg.mentions:
                 me = []
@@ -145,6 +149,15 @@ async def channeladd(msg):
             channel = await msg.guild.create_text_channel(str(channelname))
             await msg.channel.send("Text Channel- `" + str(channel) + "` has been created.")
 
+async def channeldel(msg):
+    if discord.utils.get(msg.author.roles, name="Head Admin") is None:
+        await msg.channel.send("You can't do that.")
+    else:
+        channel_name = msg.content.split(" ")[1]
+        channel = discord.utils.get(msg.guild.channels, name=channel_name)
+        await channel.delete()
+        await msg.channel.send("Channel has been deleted.")
+
 async def roleadd(msg):
     if discord.utils.get(msg.author.roles, name="Head Admin") is None:
         await msg.channel.send("You can't do that.")
@@ -155,248 +168,35 @@ async def roleadd(msg):
 
 async def addrole(msg):
     
-    member = msg.author
     
-    rolemsg = msg.content.split(" ")[2]
-    if rolemsg == "nsfw":
-        role = get(msg.guild.roles , name='nsfw')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "wet":
-        role = get(msg.guild.roles , name='wet')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "bedwars player":
-        role = get(msg.guild.roles , name='bedwars player')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "#jellyforowner2021":
-        role = get(msg.guild.roles , name='#jellyforowner2021')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "british":
-        role = get(msg.guild.roles , name='british')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "child stabber":
-        role = get(msg.guild.roles , name='child stabber')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)  
-    if rolemsg == "duck":
-        role = get(msg.guild.roles , name='duck')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "i am a cake":
-        role = get(msg.guild.roles , name='i am a cake')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "waffle":
-        role = get(msg.guild.roles , name='waffle')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "Member":
-        role = get(msg.guild.roles , name='Member')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "hi im a bot":
-        role = get(msg.guild.roles , name='hi im a bot')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "Administrator":
-        role = get(msg.guild.roles , name='Administrator')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
-    if rolemsg == "Muted":
-        role = get(msg.guild.roles , name='Muted')
-        if role in member.roles:
-            await msg.channel.send(member.mention + " already has " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.add_roles(role)
-                await msg.channel.send(str(role) + " has been added to " + user.mention)
+    
+    rol = msg.content
+    rolemsg = rol.replace("=addrole ", "")
+    role = discord.utils.get(msg.guild.roles , name=str(rolemsg))
+    print (role)
+    user = msg.author
+    if role in user.roles:
+        await msg.channel.send(user.mention + " already has " + str(role))
+    else:
+        await user.add_roles(role)
+        await msg.channel.send(str(role) + " has been added to " + user.mention)
+        
+        
+    
     
     
 
 async def delrole(msg):
+    rol = msg.content
+    rolemsg = rol.replace("=delrole ", "")
+    role = discord.utils.get(msg.guild.roles , name=str(rolemsg))
+    print (role)
+    user = msg.author
+    if role not in user.roles:
+        await msg.channel.send(user.mention + " doesn't have " + str(role))
+    else:
+        await user.remove_roles(role)
+        await msg.channel.send(str(role) + " has been removed from " + user.mention)
+        
+        
     
-    member = msg.author
-    
-    rolemsg = msg.content.split(" ")[2]
-    if rolemsg == "nsfw":
-        role = get(msg.guild.roles , name='nsfw')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "wet":
-        role = get(msg.guild.roles , name='wet')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "bedwars player":
-        role = get(msg.guild.roles , name='bedwars player')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "#jellyforowner2021":
-        role = get(msg.guild.roles , name='#jellyforowner2021')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "british":
-        role = get(msg.guild.roles , name='british')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "child stabber":
-        role = get(msg.guild.roles , name='child stabber')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)  
-    if rolemsg == "duck":
-        role = get(msg.guild.roles , name='duck')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "i am a cake":
-        role = get(msg.guild.roles , name='i am a cake')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "waffle":
-        role = get(msg.guild.roles , name='waffle')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "Member":
-        role = get(msg.guild.roles , name='Member')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "hi im a bot":
-        role = get(msg.guild.roles , name='hi im a bot')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "Administrator":
-        role = get(msg.guild.roles , name='Administrator')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)
-    if rolemsg == "Muted":
-        role = get(msg.guild.roles , name='Muted')
-        if role in member.roles == None:
-            await msg.channel.send(member.mention + " doesn't have " + str(role))
-        else:
-            for user in msg.mentions:
-
-                await user.remove_roles(role)
-                await msg.channel.send(str(role) + " has been removed from " + user.mention)

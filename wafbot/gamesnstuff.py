@@ -156,6 +156,8 @@ async def say(msg):
     words = msg.content
     wordss = words.replace("=say", "")
     await msg.delete()
+    async with msg.channel.typing():
+        await asyncio.sleep(2)
     await msg.channel.send(str(wordss))
 
 @client.event
@@ -167,6 +169,43 @@ async def afk(msg):
     if role not in member.roles:
         await member.add_roles(role)
         await msg.channel.send(member.mention + ", you are now AFK- " + reason)
+
+@client.event
+async def urban(msg):
+    words = msg.content
+    term = words.replace("=urban ", "")
+    index = 1
+    async with aiohttp.ClientSession() as session:  # Opens client session
+            async with session.get("https://api.urbandictionary.com/v0/define", params={"term": term}) as r:  # Result
+                result = await r.json()  # Parses file as json
+
+            data = result["list"][index]  # Assigns list in dict as 'data'
+
+            defin = data["definition"]  # Gets key value
+            if "2." in defin:  # If there is a second definition
+                defin = data["definition"].split("2.")  # Splits data
+                defin = defin[0]  # Sets defin as first definition
+            elif len(defin) > 250:  # Sets a 250 character limit
+                defin = defin[:250]
+
+            example = data["example"]  # Gets key value
+            if "2." in defin:  # If there is a second example splits data
+                example = data["example"].split("2.")  # Splits data
+                example = example[0]  # Sets defin as first example
+            elif len(example) > 250:   # Sets a 250 character limit
+                example = example[:250]
+
+            urban_embed = discord.Embed(title="Result- {0}".format(term),
+                                        url=data["permalink"],
+                                        color=0x06f459)
+            # Creates# embed with a title with a hyperlink and set's the colour of the bar
+            urban_embed.add_field(name="Definition", value=defin, inline=False)  # Adds field
+            urban_embed.add_field(name="Example", value=example or "N/A", inline=False)
+            urban_embed.add_field(name="👍", value=data["thumbs_up"], inline=True)
+            urban_embed.add_field(name="👎", value=data["thumbs_down"], inline=True)
+            urban_embed.set_footer(text="Author: " + data["author"])
+            await msg.channel.send(embed=urban_embed)
+
 
 @client.event
 async def google(msg):
@@ -249,7 +288,8 @@ async def kill(msg):
         c8 = str(user.mention) + " got thrown into a volcano by " + str(msg.author.mention) 
         c9 = str(msg.author.mention) + " threw an exploding kitten at " + str(user.mention)
         c10 = str(user.mention) + " attempted to attack " + str(msg.author.mention) + " and failed."
-        clist = [c, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10]
+        c11 = str(msg.author.mention) + " buffed " + str(user.mention) + "'s banana too hard."
+        clist = [c, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11]
         await msg.channel.send(random.choice(clist))
 
 @client.event
@@ -265,7 +305,7 @@ async def uselesscommand(msg):
 
 async def announce(msg):
     if msg.author.id == 698707989531459595:
-        channel = client.get_channel(762718464124125226)
+        
         announcee = msg.content
         announcement = announcee.replace("=announce", "")
         await msg.channel.send(announcement + "\n@everyone")

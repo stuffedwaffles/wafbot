@@ -136,5 +136,7 @@ await msg.add_reaction("👍")
 
 
 
-        if msg.content.startswith("="):
-        thing = str(msg.author) + " ran command " + str(msg.content) + str(msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p") + " in " + str(msg.channel)
+        if "sleep" in msg.content.lower():
+        user = msg.author
+        if user.bot == False:
+            await msg.channel.send("Hey you kid you need to go to sleep so get out of here and sleep before i kick you stop texting in discord servers its sleepy time so get the frick out of here")

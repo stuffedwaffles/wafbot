@@ -83,8 +83,7 @@ async def play(client, msg):
     title = searchfrommsg
     song_queue.append(song)
 
-    if voice.is_paused():
-        voice.resume()
+    
     
     if voice is None:
         await msg.channel.send("Not in a vc!")
@@ -110,7 +109,8 @@ async def queue(msg):
     if song_queue == []:
         await msg.channel.send("Nothing in queue!")
     else:
-        embed=discord.Embed(title="Queue!(still in progress dont judge me)", description=str(song_queue), color=0x06f459)
+        embed=discord.Embed(title="Queue!(still in progress dont judge me)", description="Now Playing- " + str(song_queue)[2], color=0x06f459)
+        embed.add_field(name="Rest of queue-", value=str(song_queue)[2:], inline=False)
         embed.set_footer(text="Contact STUFFEDWAFFLES for more info on bot")
         await msg.channel.send(embed=embed)
 
@@ -129,8 +129,10 @@ async def resume(client, msg):
 
 async def clear(client, msg):
     voice: discord.VoiceClient = discord.utils.get(client.voice_clients, guild=msg.author.guild)
-
-    
+    for file in os.listdir("./"):
+            if file.endswith(".webm"):
+                os.remove("song.webm")
+    voice.stop()
     song_queue.clear()
     await msg.add_reaction("👍")
 
@@ -138,7 +140,7 @@ async def loop(client, msg):
     voice = discord.utils.get(client.voice_clients, guild=msg.channel.guild)
     guild = msg.guild
     def repeat(guild, voice):
-        
+    
         voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, VoiceClient))
         voice.is_playing()
     if voice.is_playing() is False:
@@ -156,4 +158,9 @@ async def remove(client, msg):
     await msg.add_reaction("👍")
 
 
-    
+async def stop(client, msg):
+    voice = discord.utils.get(client.voice_clients, guild=msg.channel.guild)
+    voice.stop()
+    await msg.channel.send("Song stopped.")
+
+

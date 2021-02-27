@@ -1,4 +1,6 @@
 # wafbot
 
-wafbot- a bot made with almost no experience for fun which actually seems to work so yay!
-if someone wants to use this code go ahead, please dont steal the whole thing though(sorry its messy)
+Waf Bot is a bot made with almost no experience
+Its mainly just for fun and experimenting with code
+If someone wants to use this code go ahead, please dont steal the whole thing though(if you do look at it sorry its messy)
+Creator - STUFFEDWAFFLES#8367

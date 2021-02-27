@@ -26,9 +26,9 @@ import urllib.parse, urllib.request, re
 import wavelink
 
 intents = discord.Intents.default()
+intents.members = True
 
-
-#define the bot
+#client thingy
 client = discord.Client(intents=intents)
 bot = commands.Bot
 #logging
@@ -71,47 +71,70 @@ async def on_message(msg):
     if "69" in msg.content:
         user = msg.author
         if user.bot == False:
-            await msg.channel.send("*nice*")
-
+            await msg.channel.send("***nice***", delete_after=5)
+            
         
     if msg.content.startswith("uno reverse card"):
         await msg.channel.send("no")
         
-    if "bye" in msg.content.lower() or "goodnight" in msg.content.lower() or "cya" in msg.content.lower():
+    if "bye waf bot" in msg.content.lower() or "goodnight waf bot" in msg.content.lower() or "cya waf bot" in msg.content.lower():
         user = msg.author
         if user.bot == False:
+            async with msg.channel.typing():
+                await asyncio.sleep(1)
             await msg.channel.send("cya later! come back soon!")
         
    
         
-    if msg.content.startswith("how are you waf bot"):
-        r = "I'm doing great thanks for asking"
-        r1 = "I'm drunk again!"
-        r3 = "why do you care?"
-        r4 = "I'm doing just fine."
-        r5 = "im doin pretty good, how are you"
-        res = [r,r1,r3,r4]
-        async with msg.channel.typing():
-                await asyncio.sleep(1)
-        await msg.channel.send(random.choice(res))
-    
-    if msg.content.startswith("hello wa") or msg.content.startswith("hey wa") or msg.content.startswith("hi wa") or msg.content.startswith("yo wa") or msg.content.startswith("bonjour"):
+    if "how are you waf bot" in msg.content.lower() or "how you doing waf bot" in msg.content.lower() or "whats up waf bot" in msg.content.lower() or "how r u waf bot" in msg.content.lower() or "hows life waf bot" in msg.content.lower():
         user = msg.author
         if user.bot == False:
-            await msg.channel.send("ello there " + str(user.mention) + "!")
+            r = "I'm doing great thanks for asking, how are you"
+            r1 = "I'm drunk again! how you doin buddy?"
+            r3 = "im depressed, how are you"
+            r4 = "I'm doing just fine. how are you?"
+            r5 = "im doin pretty good, how are you"
+            res = [r,r1,r3,r4, r5]
+            async with msg.channel.typing():
+                    await asyncio.sleep(1)
+            await msg.channel.send(random.choice(res))
+            
+            def check(m):
+                return m.channel == msg.channel and m.author == msg.author
+                
+            message = await client.wait_for("message", check=check)
+            
+            
+            if "good" in message.content or "happy" in message.content or "great" in message.content or "decent" in message.content:
+                async with msg.channel.typing():
+                    await asyncio.sleep(1)
+                await msg.channel.send("Thats good to hear!")
+            if "bad" in message.content or "eh" in message.content or "sad" in message.content or "depress" in message.content:
+                async with msg.channel.typing():
+                    await asyncio.sleep(1)
+                await msg.channel.send("I'm sorry to hear that, i hope things improve! if you need anything let the admins here know so they can help!")
+    
+    if "thank" in msg.content and "waf" in msg.content:
+        await msg.channel.send(f"Np, {msg.author.mention}!") 
+    
+    if msg.content.startswith("hello waf bot") or msg.content.startswith("hey waf bot") or msg.content.startswith("hi waf bot") or msg.content.startswith("yo waf bot") or msg.content.startswith("bonjour"):
+        user = msg.author
+        if user.bot == False:
+            async with msg.channel.typing():
+                await asyncio.sleep(1)
+            await msg.channel.send("hey there " + str(user.mention) + "!")
 
-    if msg.content.startswith("love you waf bot"):
+    if "love you waf bot" in msg.content.lower():
         e1 = ":heart:"
         e2 = "i hate you"
         e3 = "fak off"
-        es = [e1, e2, e3]
+        e4 = "leave me alone"
+        e5 = ":middle_finger:"
+        es = [e1, e2, e3, e4, e5]
         e = random.choice(es)
         await msg.channel.send(e)
         
-    if "sleep" in msg.content.lower():
-        user = msg.author
-        if user.bot == False:
-            await msg.channel.send("Hey you kid you need to go to sleep so get out of here and sleep before i kick you stop texting in discord servers its sleepy time so get the frick out of here")
+    
         
     if msg.content.startswith("good job waf bot"):
         id = msg.author.id
@@ -123,10 +146,10 @@ async def on_message(msg):
     if "dyno" in msg.content.lower():
         user = msg.author
         if user.bot == False:
-            if msg.guild.id == 762718463575064636:
-                async with msg.channel.typing():
-                    await asyncio.sleep(2)
-                await msg.channel.send("dyno is the worst bot ever he sucks and should die in a hole frick dyno why would you even mention him hes so bad we hate dyno i will fight him frick you dyno")
+            
+            async with msg.channel.typing():
+                await asyncio.sleep(2)
+            await msg.channel.send("dyno is the worst bot ever he sucks and should die in a hole frick dyno why would you even mention him hes so bad we hate dyno i will fight him frick you dyno")
             
     if msg.content.startswith("waf bot"):
         await msg.channel.send("thats me!")
@@ -313,6 +336,9 @@ async def on_message(msg):
         
         if "=flip" in msg.content:
             await flip(msg)
+        
+        if "=timer" in msg.content:
+            await timer(msg)
            
         
         if "=meme" in msg.content:
@@ -348,6 +374,9 @@ async def on_message(msg):
         
         if "=wholesome" in msg.content:
             await wholesome(msg)
+        
+        if "=urban" in msg.content:
+            await urban(msg)
             
 
             #mod commands
@@ -401,6 +430,9 @@ async def on_message(msg):
         
         if "=channeladd" in msg.content:
             await channeladd(msg)
+        
+        if "=channeldel" in msg.content:
+            await channeldel(msg)
             
         
         if "=roleadd" in msg.content:
@@ -446,6 +478,9 @@ async def on_message(msg):
         
         if "=remove" in msg.content:
             await remove(client, msg)
+        
+        if "=voicekick" in msg.content:
+            await voicekick(client, msg)
             
         
 
@@ -479,18 +514,18 @@ async def on_message(msg):
 @client.event
 async def on_member_join(member):
     role = discord.utils.get(member.guild.roles, name='Member')
-    channel = client.get_channel(762718464124125226)
+    
     await member.add_roles(role)
     
-    await channel.send("Hey there " + member.mention + "! Welcome to " + str(member.guild.name) + "! If you need any help feel free to ask the admins, and to see a list of my commands do =help in #bot-commands. Enjoy your stay!")
+    await member.send("Hey there " + member.mention + "! Welcome to **" + str(member.guild.name) + "**! If you need any help feel free to ask the admins, and to see a list of my commands do `=help` in the bot commands channel. Enjoy your stay!")
        
 #bot status + game
 @client.event
 async def on_ready():
     
+    channel = client.get_channel(762718464124125226)
     
-    
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="nothing. | type =help"))
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.watching, name="waffles|type =help"))
     
     
     print(f'Bot connected as {client.user.name}')

@@ -35,7 +35,12 @@ async def ched(msg):
     
 async def rick(msg):
     await msg.delete()
-    await msg.channel.send(file=discord.File('rick.gif'))
+    embed=discord.Embed(title="Never gonna give you up", description="never gonna let you down", color=0x06f459)
+    embed.add_field(name="never gonna run around and", value="desert you", inline=True)
+    embed.add_field(name="never gonna make you cry", value="never gonna say goodbye", inline=True)
+    embed.set_image(url="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg")
+    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
+    await msg.channel.send(embed=embed)
     
    
     

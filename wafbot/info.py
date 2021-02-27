@@ -8,16 +8,17 @@ import youtube_dl
 from discord.voice_client import VoiceClient
 import random
 import praw 
+import asyncio
 
 client = discord.Client()
 
 async def help(msg):
     embed=discord.Embed(title="Waf Bot Help!", description="Waf Bot is a simple bot made for the le Kingdom SMP server. To see everything Waf Bot can do, check the github!", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
-    embed.add_field(name="Fun commands-", value="`=help fun`", inline=False)
-    embed.add_field(name="Mod commands-", value="`=help mod`", inline=False)
-    embed.add_field(name="Server/info commands-", value="`=help info`", inline=False)
-    embed.add_field(name="Music commands-", value="`=help music`", inline=False)
+    embed.add_field(name="Fun commands-", value="`=help fun`", inline=True)
+    embed.add_field(name="Mod commands-", value="`=help mod`", inline=True)
+    embed.add_field(name="Server/info commands-", value="`=help info`", inline=True)
+    embed.add_field(name="Music commands-", value="`=help music`", inline=True)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -25,7 +26,7 @@ async def helpfun(msg):
     embed=discord.Embed(title="Waf Bot fun commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
     embed.add_field(name="Twitch/YT channels!", value="`=jedi` - info about Jedi \n`=ched` - info about ched \n`=destiny` - info about destiny \n`=daky` - info about dak \n`=aqwuah` - info about aqwuah", inline=False)
-    embed.add_field(name="Other-", value="`=waffle` - waffles! \n`=para` - para! \n`=rickroll` - rickroll people \n`=dog` - get a doggo pic! \n`=cat` - get a catto pic! \n`=meme` - get a random meme from reddit \n`=horror` - get a horror meme \n`=wholesome` - get a random wholesome image or meme \n`=aww` - get an image of a cute animal from reddit! \n`=st` - get a random shower thought to think about \n`=nsfw` - get a nsfw image(PLEASE DONT USE IF YOU ARE UNDER 14 OR USE AT YOUR OWN RISK)\n`=google` - get a google result for a query \n`=poll` - start a poll(only use in the poll channel) \n`=roll` - roll a die \n`=flip` - flip a coin! \n`=rps` - play rock, paper, scissors with the bot \n`=rr` - play some russian roulette\n`=kill` - kill a user \n`=dm` - dm a user \n`ping` - get a response and client latency \n`=afk` - set an afk status to let others know you are afk", inline=False)
+    embed.add_field(name="Other-", value="`=waffle` - waffles! \n`=para` - para! \n`=rickroll` - rickroll people \n`=dog` - get a doggo pic! \n`=cat` - get a catto pic! \n`=meme` - get a random meme from reddit \n`=horror` - get a horror meme \n`=wholesome` - get a random wholesome image or meme \n`=aww` - get an image of a cute animal from reddit! \n`=st` - get a random shower thought to think about \n`=nsfw` - get a nsfw image(PLEASE DONT USE IF YOU ARE UNDER 14 OR USE AT YOUR OWN RISK) \n`=roll` - roll a die \n`=flip` - flip a coin! \n`=rps` - play rock, paper, scissors with the bot \n`=rr` - play some russian roulette\n`=kill` - kill a user", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -33,15 +34,16 @@ async def helpmod(msg):
     embed=discord.Embed(title="Waf Bot moderator commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
     embed.add_field(name="Banning, Kicking, Muting-", value="`=ban` - ban a user \n`=blist` - get a list of banned users \n`=kick` - kick a user \n`=mute` - mute a user \n`=unmute` - unmute a user \n`=warn` - warn a user", inline=False)
-    embed.add_field(name="Moderator only commands-", value="`=say` - make the bot say something \n`=nick` - give a user a nickname \n`=addrole` - add a role to a user \n`=delrole` - remove a role from a user \n`=shutdown` - shut the bot down if needed \n`=yeet` - clear messages from a user or a certain number of messages \n`=channeladd` - add a channel with a specified name and type \n`=roleadd` - create a role with a specified name ", inline=False)
+    embed.add_field(name="Moderator only commands-", value="`=say` - make the bot say something \n`=dm` - dm a user \n`=nick` - give a user a nickname \n`=addrole` - add a role to a user \n`=delrole` - remove a role from a user \n`=voicekick` - kick a user from a voice channel\n`=shutdown` - shut the bot down if needed \n`=yeet` - clear messages from a user or a certain number of messages \n`=channeladd` - add a channel with a specified name and type \n`=channeldel` - remove a specified channel \n`=roleadd` - create a role with a specified name ", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
 async def helpinfo(msg):
     embed=discord.Embed(title="Waf Bot info commands!", description="For other commands, do =help.", color=0x06f459)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
-    embed.add_field(name="Server info-", value="`=serverinfo` - get info about the server \n`=invite` - get an invite to a server that probably isn't yours \n`=hypickle` - hypixel info \n`=help` - the command you did to get here", inline=False)
+    embed.add_field(name="Server info-", value="`=serverinfo` - get info about the server \n`=invite` - get an invite to a server that probably isn't yours \n`=hypickle` - hypixel info \n`=help` - the command you did to get here \n`=help fun` - a list of fun commands \n`=help mod` - a list of moderator commands \n`=help info` - info and utility commands \n`=help music` - music and voice commands", inline=False)
     embed.add_field(name="User/bot info-", value="`=user` - get info about a user \n`=myid` - get your id \n`=botinfo` - get info about bot \n`=github` - get the bots github link for the code", inline=False)
+    embed.add_field(name="Utility Commands-", value="`=urban` - get an urban dictionary definition of a word\n`=google` - get a google result for a query \n`=poll` - start a poll(only use in the poll channel\n`ping` - get a response and client latency \n`=afk` - set an afk status to let others know you are afk", inline=False)
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
     await msg.channel.send(embed=embed)
 
@@ -74,15 +76,19 @@ async def users(msg):
         avatar = user.avatar_url
         date = user.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")
         usersnick = user.display_name
+        
+        for role in user.roles:
+            roles = role.name
         if user.bot == True:
             bot = "Yes."
         elif user.bot == False:
             bot = "No."
-        embed=discord.Embed(title="User- " + str(user.mention), description="User ID- " + str(id), color=0x06f459)
+        embed=discord.Embed(title="User ID- " + str(id), color=0x06f459)
         embed.set_author(name=str(user))
         embed.add_field(name="Account Created", value="Created- " + str(date), inline=False)
         embed.add_field(name="Bot? ", value=str(bot), inline=True)
         embed.add_field(name="Nick-", value=str(usersnick), inline=True)
+        embed.add_field(name="Highest Role-", value=str(roles), inline=False)
         embed.set_image(url=str(avatar))
         embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
         await msg.channel.send(embed=embed)
@@ -92,15 +98,18 @@ async def users(msg):
         avatar = (user.avatar_url)
         date = user.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")
         usersnick = user.display_name
+        for role in user.roles:
+            roles = role.name
         if user.bot == True:
             bot = "Yes."
         elif user.bot == False:
             bot = "No."
-        embed=discord.Embed(title="User- " + str(user), description="User ID- " + str(id), color=0x06f459)
+        embed=discord.Embed(title="User ID- " + str(id), color=0x06f459)
         embed.set_author(name=str(user))
         embed.add_field(name="Account Created", value="Created- " + str(date), inline=False)
         embed.add_field(name="Bot? ", value=str(bot), inline=True)
         embed.add_field(name="Nick-", value=str(usersnick), inline=True)
+        embed.add_field(name="Highest Role-", value=str(roles), inline=False)
         embed.set_image(url=str(avatar))
         embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
         await msg.channel.send(embed=embed)
@@ -150,3 +159,24 @@ async def github(msg):
     await msg.channel.send("Here is Waf Bot's code- https://github.com/stuffedwaffles/wafbot/tree/master")
 
 
+async def timer(msg):
+    time = int(msg.content.split(" ")[1])
+    thing = str(msg.content.split(" ")[2])
+    if "m" in thing:
+        actualtime = float(time) * float(60)
+        thingy = "minutes"
+    if "s" in thing:
+        actualtime = time
+        thingy = "seconds"
+    if "y" in thing:
+        actualtime = float(time) * float(31536000)
+        thingy = "years"
+    if "d" in thing:
+        actualtime = float(time) * float(86400)
+        thingy = "days"
+    if "h" in thing:
+        actualtime = float(time) * float(3600)
+        thingy = "hours"
+    await msg.channel.send(f"Setting timer for {time} {thingy}.")
+    await asyncio.sleep(actualtime)
+    await msg.channel.send(f"{msg.author.mention}, your timer of {time} {thingy} is done!")
