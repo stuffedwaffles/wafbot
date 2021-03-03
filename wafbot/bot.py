@@ -11,12 +11,6 @@ import asyncio
 import records
 import random
 import youtube_dl
-from gamesnstuff import *
-from info import *
-from ppl import *
-from moderation import *
-from music import *
-from thing import *
 import logging
 import json
 import praw 
@@ -24,11 +18,18 @@ from discord import FFmpegPCMAudio
 from youtube_dl import YoutubeDL
 import urllib.parse, urllib.request, re
 import wavelink
+import requests
+from gamesnstuff import *
+from info import *
+from ppl import *
+from moderation import *
+from music import *
+from thing import *
 
 intents = discord.Intents.default()
 intents.members = True
 
-#client thingy
+
 client = discord.Client(intents=intents)
 bot = commands.Bot
 #logging
@@ -44,52 +45,37 @@ logger.addHandler(handler)
 async def on_message(msg):
 
     
-    #basic commands and responses for fun
+    #basic responses 
     
-    if msg.content.startswith("pong"):
-        await msg.channel.send("ping")
+    if msg.content.startswith("test"):
+        await msg.add_reaction("👍")  
                
     if msg.content.lower() == "e":
         await msg.delete()
-        await msg.channel.send("stfu")
-        
-    if msg.content.startswith ("stfu"):
-        await msg.delete()
+        respond = await msg.channel.send("stfu")
+        await respond.delete()
     
     if msg.content.startswith("bruh"):
-        e = "🤔"
-        await msg.add_reaction(e)
-
-    if msg.content.startswith("bots suck"):
-        await msg.channel.send("humans suck")
-        
-    if msg.author.id == 155149108183695360:
-        if msg.guild.id == 762718463575064636:
-            await msg.channel.send("Who brought this stupid bot back ban this fricking idiot right now")
-        
-
+        await msg.add_reaction("🤔")
+    
     if "69" in msg.content:
-        user = msg.author
-        if user.bot == False:
+        if msg.author.bot == False:
             await msg.channel.send("***nice***", delete_after=5)
-            
         
     if msg.content.startswith("uno reverse card"):
-        await msg.channel.send("no")
+        await msg.channel.send("double uno reverse card")
         
-    if "bye waf bot" in msg.content.lower() or "goodnight waf bot" in msg.content.lower() or "cya waf bot" in msg.content.lower():
-        user = msg.author
-        if user.bot == False:
+    if ["bye waf bot", "goodnight waf bot", "cya waf bot"] in msg.content.lower():
+        if msg.author.bot == False:
             async with msg.channel.typing():
                 await asyncio.sleep(1)
-            await msg.channel.send("cya later! come back soon!")
+            await msg.channel.send(f"cya later {msg.author.mention}!")
         
    
         
-    if "how are you waf bot" in msg.content.lower() or "how you doing waf bot" in msg.content.lower() or "whats up waf bot" in msg.content.lower() or "how r u waf bot" in msg.content.lower() or "hows life waf bot" in msg.content.lower():
-        user = msg.author
-        if user.bot == False:
-            r = "I'm doing great thanks for asking, how are you"
+    if ["how are you waf bot", "how you doing waf bot", "whats up waf bot", "how r u waf bot", "hows life waf bot"] in msg.content.lower():
+        if msg.author.bot == False:
+            r = "I'm doing great, how are you"
             r1 = "I'm drunk again! how you doin buddy?"
             r3 = "im depressed, how are you"
             r4 = "I'm doing just fine. how are you?"
@@ -98,18 +84,16 @@ async def on_message(msg):
             async with msg.channel.typing():
                     await asyncio.sleep(1)
             await msg.channel.send(random.choice(res))
-            
+
             def check(m):
                 return m.channel == msg.channel and m.author == msg.author
-                
             message = await client.wait_for("message", check=check)
-            
-            
-            if "good" in message.content or "happy" in message.content or "great" in message.content or "decent" in message.content:
+
+            if ["good", "happy", "great", "decent"] in message.content:
                 async with msg.channel.typing():
                     await asyncio.sleep(1)
                 await msg.channel.send("Thats good to hear!")
-            if "bad" in message.content or "eh" in message.content or "sad" in message.content or "depress" in message.content:
+            if ["bad", "eh", "sad", "depress"] in message.content:
                 async with msg.channel.typing():
                     await asyncio.sleep(1)
                 await msg.channel.send("I'm sorry to hear that, i hope things improve! if you need anything let the admins here know so they can help!")
@@ -117,12 +101,11 @@ async def on_message(msg):
     if "thank" in msg.content and "waf" in msg.content:
         await msg.channel.send(f"Np, {msg.author.mention}!") 
     
-    if msg.content.startswith("hello waf bot") or msg.content.startswith("hey waf bot") or msg.content.startswith("hi waf bot") or msg.content.startswith("yo waf bot") or msg.content.startswith("bonjour"):
-        user = msg.author
-        if user.bot == False:
+    if ["hello waf bot", "hey waf bot", "hi waf bot", "yo waf bot", "bonjour"] in msg.content:
+        if msg.author.bot == False:
             async with msg.channel.typing():
                 await asyncio.sleep(1)
-            await msg.channel.send("hey there " + str(user.mention) + "!")
+            await msg.channel.send(f"hey there {msg.author.mention}!")
 
     if "love you waf bot" in msg.content.lower():
         e1 = ":heart:"
@@ -131,46 +114,25 @@ async def on_message(msg):
         e4 = "leave me alone"
         e5 = ":middle_finger:"
         es = [e1, e2, e3, e4, e5]
-        e = random.choice(es)
-        await msg.channel.send(e)
-        
-    
-        
-    if msg.content.startswith("good job waf bot"):
-        id = msg.author.id
-        user = discord.Object(id)
-        user.mention = id
-        user.display_name = f"<@{id}>"
-        await msg.channel.send("you too " + str(user.display_name))
+        await msg.channel.send(random.choice(es))
         
     if "dyno" in msg.content.lower():
-        user = msg.author
-        if user.bot == False:
-            
+        if msg.author.bot == False:
             async with msg.channel.typing():
                 await asyncio.sleep(2)
             await msg.channel.send("dyno is the worst bot ever he sucks and should die in a hole frick dyno why would you even mention him hes so bad we hate dyno i will fight him frick you dyno")
             
-    if msg.content.startswith("waf bot"):
+    if "waf bot" in msg.content:
         await msg.channel.send("thats me!")
    
     if client.user.mentioned_in(msg):
         if msg.author.bot == False:
-            await msg.channel.send("thats me!")
-
-    if msg.content.startswith("test"):
-        await msg.add_reaction("👍")    
-
-        
-    if msg.content.startswith("tell me a joke") or msg.content.startswith("Tell me a joke"):
+            await msg.channel.send(f"hey {msg.author.mention}, whatcha need?")
+  
+    if "tell me a joke" in msg.content.lower():
         async with msg.channel.typing():
                 await asyncio.sleep(2)
-        await joke(msg)
-
-    if msg.author.id == 698707989531459595:
-        numb = random.randint(1,3)
-        if numb == 2:
-            await msg.add_reaction("🧇")
+        await joke(msg)        
 
     for user in msg.mentions:
         if msg.author.bot == False:
@@ -182,29 +144,8 @@ async def on_message(msg):
         await msg.author.remove_roles(role)
         await msg.channel.send("You are no longer AFK.")
     
-    
-      # attempted to optimize, not working rn
-        # elif msg.content[0:5] == "=join":
-        #     await join(client, msg)
 
-        # elif "leave" in msg.content:
-        #     await leave(client, msg)
 
-        # elif "play" in msg.content:
-        #     await play(client, msg)
-
-        # else:
-        #     try:
-        #         exec("await " + msg.content[1:]+"(msg)")
-        #     except Exception as e:
-        #         print(str(e))
-        #         embed=discord.Embed(title="Invalid Command.", description="Do =help for a list of commands.", color=0x06f459)
-        #         embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
-        #         await msg.channel.send(embed=embed)  
-
-       
-
-    
     if msg.content.startswith("="):
         if "=ping" in msg.content:
             async with msg.channel.typing():
@@ -212,289 +153,210 @@ async def on_message(msg):
             message = await msg.channel.send(f'Pong!🏓')
             await asyncio.sleep(1)
             await message.edit(content=f'Pong!🏓\n`Responded in {round(client.latency * 1000)}ms`')
-            
-
 
         if "=user" in msg.content:
             await users(msg)
-            
-
 
         if "=waffle" in msg.content:
             await waffle(msg)
             
-
-
         if "=jedi" in msg.content:
             await jedi(msg)
             
-
-
         if "=para" in msg.content:
             await para(msg)
-            
-
+        
         if "=ched" in msg.content:
             await ched(msg)
             
-
         if "=rickroll" in msg.content:
             await rick(msg)
-            
-
+        
         if "=destiny" in msg.content:
             await destiny(msg)
             
-
         if "=daky" in msg.content:
             await daky(msg)
            
-
         if "=aqwuah" in msg.content:
             await aqwuah(msg)
-           
-
-            #info stuff
-        
         
         if "=help fun" in msg.content:
             await helpfun(msg)
             
-        
         if "=help mod" in msg.content:
             await helpmod(msg)
-            
         
         if "=help info" in msg.content:
             await helpinfo(msg)
             
-        
         if "=help music" in msg.content:
             await helpmusic(msg)
            
-        
         if msg.content == "=help":
             await help(msg)
-            
-
+        
         if "=botinfo" in msg.content:
             await botinfo(msg)
             
-        
         if "=serverinfo" in msg.content:
             await serverinfo(msg)
-            
-
+        
         if "=hypickle" in msg.content:
             await hypickle(msg)
             
         if "=invite" in msg.content:
             await invite(msg)
            
-
         if "=myid" in msg.content:
             await myid(msg)
                 
-
         if "=github" in msg.content:
             await github(msg)
-           
         
-
-            #games
         if "=dog" in msg.content:
             await dog(msg)
            
-
         if "=cat" in msg.content:
             await cat(msg)
             
-
         if "=rps" in msg.content:
             await rps(msg)
             
-        
         if "=roll" in msg.content:
             await roll(msg)
             
-        
         if "=say" in msg.content:
             await say(msg)
-            
-
+        
         if "=afk" in msg.content:
             await afk(msg)
             
-        
         if "=google" in msg.content:
             await google(msg)
             
-        
         if "=poll" in msg.content:
             await poll(msg)
             
-        
         if "=flip" in msg.content:
             await flip(msg)
         
         if "=timer" in msg.content:
             await timer(msg)
            
-        
         if "=meme" in msg.content:
             await meme(msg)
             
-        
         if "=cursed" in msg.content:
             await cursed(msg)
             
-        
         if "=nsfw" in msg.content:
             await nsfw(msg)
-        
-        if "=horror" in msg.content:
-            await horror(msg)
             
-
         if "=kill" in msg.content:
             await kill(msg)
             
-
         if "=rr" in msg.content:
             await russianroulette(msg)
             
-        
         if "=st" in msg.content:
             await thoughts(msg)
-            
-
+        
         if "=aww" in msg.content:
             await aww(msg)
             
-        
         if "=wholesome" in msg.content:
             await wholesome(msg)
         
         if "=urban" in msg.content:
             await urban(msg)
             
-
-            #mod commands
         if "=kick" in msg.content:
             await kick(msg)
-            
-
+        
         if "=ban" in msg.content:
             await ban(msg)
             
-        
         if "=blist" in msg.content:
             await banlist(msg)
-            
-
+        
         if "=mute" in msg.content:
             await mute(msg)
-            
-
+        
         if "=unmute" in msg.content:
             await unmute(msg)
-            
-
+        
         if "=nick" in msg.content:
             await nick(msg)
-            
-
+        
         if "=addrole" in msg.content:
             await addrole(msg)
             
-        
         if "=warn" in msg.content:
             await warn(msg)
             
-
         if "=dm" in msg.content:
             await dm(msg)
             
-
         if "=delrole" in msg.content:
             await delrole(msg)
             
-        
         if "=shutdown" in msg.content:
             await shutdown(client, msg)
             
-        
         if "=yeet" in msg.content:
             await yeet(msg)
             
-        
         if "=channeladd" in msg.content:
             await channeladd(msg)
         
         if "=channeldel" in msg.content:
             await channeldel(msg)
             
-        
         if "=roleadd" in msg.content:
             await roleadd(msg)
-            
+        
+        if "=roledel" in msg.content:
+            await roledel(msg)
 
-        # music
         if "=join" in msg.content:
             await join(client, msg)
-            
-
+        
         if "=leave" in msg.content:
             await leave(client, msg)
             
-
         if "=play" in msg.content:
             await play(client, msg)
             
-        
         if "=pause" in msg.content:
             await pause(client, msg)
             
-        
         if "=resume" in msg.content:
             await resume(client, msg)
             
-        
         if "=video" in msg.content:
             await video(msg)
-            
-
+        
         if "=queue" in msg.content:
             await queue(msg)
             
-        
         if "=clear" in msg.content:
             await clear(client, msg)
-           
-
+        
         if "=loop" in msg.content:
             await loop(client, msg)
             
-        
         if "=remove" in msg.content:
             await remove(client, msg)
         
         if "=voicekick" in msg.content:
             await voicekick(client, msg)
-            
-        
 
         if "=smite" in msg.content:
             await smite(msg)
-            
         
-        if "=command" in msg.content:
-            await uselesscommand(msg)
-            
-
         if "=announce" in msg.content:
             await announce(msg)
-            
         
         if "=bigletters" in msg.content:
             await bigletters(msg)
@@ -514,23 +376,15 @@ async def on_message(msg):
 @client.event
 async def on_member_join(member):
     role = discord.utils.get(member.guild.roles, name='Member')
-    
     await member.add_roles(role)
-    
     await member.send("Hey there " + member.mention + "! Welcome to **" + str(member.guild.name) + "**! If you need any help feel free to ask the admins, and to see a list of my commands do `=help` in the bot commands channel. Enjoy your stay!")
-       
-#bot status + game
-@client.event
-async def on_ready():
-    
-    channel = client.get_channel(762718464124125226)
-    
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.watching, name="waffles|type =help"))
-    
-    
-    print(f'Bot connected as {client.user.name}')
 
- 
+#bot status 
+@client.event
+async def on_ready():    
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.watching, name="waffles|type =help"))
+    print(f'Bot connected as {client.user.name}')
+     
    
 
 with open(os.getcwd()+"/secrets.json") as f:

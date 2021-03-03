@@ -41,7 +41,7 @@ async def on_message(msg):
             member = msg.author
             numb = random.randint(1,5)
             if numb == 2:
-                await msg.channel.send("Hey " + member.mention + "! Watch your pooping language.")
+                await msg.channel.send("Hey " + member.mention + "! Watch your language.")
 
 def repeat(guild, voice, audio):
         voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, voice, song))

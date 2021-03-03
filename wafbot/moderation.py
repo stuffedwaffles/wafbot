@@ -3,8 +3,22 @@ import discord
 from discord.utils import get
 from discord import Member
 from discord.ext import commands
+from discord.voice_client import VoiceClient
+import os
+from os import path
+import nacl
 import asyncio
+import records
+import random
+import youtube_dl
+import logging
+import json
 import praw 
+from discord import FFmpegPCMAudio
+from youtube_dl import YoutubeDL
+import urllib.parse, urllib.request, re
+import wavelink
+import requests
 
 client = discord.Client()
 #mod commands
@@ -14,34 +28,30 @@ async def kick(msg):
     
     member = msg.author
     if discord.utils.get(member.roles, name="Head Admin") is None:
-        await msg.channel.send("You don't have permission to kick ")
-        
+        await msg.channel.send("You don't have permission to kick")
     else:
         for user in msg.mentions:
             await user.kick()
-            await msg.channel.send(str(user) + " has been kicked")
+            await msg.channel.send(f"{user} has been kicked by {msg.author.mention}")
         
 @client.event
 async def ban(msg):
-    
     member = msg.author
     if discord.utils.get(member.roles, name="Head Admin") is None:
         for user in msg.mentions:
             
-            await msg.channel.send("You dont have permission to ban " + str(user))
+            await msg.channel.send("You dont have permission to ban")
     else:
         for user in msg.mentions:
             
             await user.ban()
-            await msg.channel.send(str(user) + " has been banned")
+            await msg.channel.send(f"{user} has been banned by {msg.author.mention}")
         
 async def banlist(msg):
     guild = msg.guild
     bans = await guild.bans()
     for ban in bans:
-        await msg.channel.send("Name - `" + str(ban.user.name) + "`, ID - `" + str(ban.user.id) + "`")
-
-
+        await msg.channel.send(f"User name - `{ban.user.name}`, User ID - `{ban.user.id}`")
 
 @client.event
 async def mute(msg):
@@ -50,16 +60,18 @@ async def mute(msg):
     if discord.utils.get(member.roles, name="Head Admin") is None:
         for user in msg.mentions:
             
-            await msg.channel.send("You dont have permission to mute " + str(user))
+            await msg.channel.send("You dont have permission to mute")
         
     else:
         for user in msg.mentions:
             voice = get(client.voice_clients, guild=msg.guild)
             role = discord.utils.get(msg.guild.roles, name='Muted')
+            if role is None:
+                role = await msg.guild.create_role(name='Muted')
             await user.add_roles(role)
             if voice == True:
                 await user.edit(mute=True, deafen=True)
-            await msg.channel.send(str(user) + " has been muted")
+            await msg.channel.send(f"{user} has been muted by {msg.author.mention}")
 
 async def unmute(msg):
     
@@ -67,14 +79,14 @@ async def unmute(msg):
     if discord.utils.get(member.roles, name="Head Admin") is None:
         for user in msg.mentions:
             
-            await msg.channel.send("You dont have permission to unmute " + str(user))
+            await msg.channel.send("You dont have permission to unmute")
     else:
         for user in msg.mentions:
             
             role = discord.utils.get(msg.guild.roles, name='Muted')
             await user.remove_roles(role)
             await user.edit(mute=False, deafen=False)
-            await msg.channel.send(str(user) + " has been unmuted")
+            await msg.channel.send(f"{user} has been unmuted by {msg.author.mention}")
 
 async def voicekick(client, msg):
     for user in msg.mentions:
@@ -94,28 +106,23 @@ async def nick(msg):
         actualnick = ''.join(nick)
         for user in msg.mentions:
             await user.edit(nick=actualnick)
-            await msg.channel.send(str(user) + "'s nick has been changed.")
+            await msg.channel.send(f"{user.mention}'s nick has been changed.")
 
 async def warn(msg):
-    
     warnin = msg.content.split(" ")[2:]
     warning = ''.join(warnin)
     for user in msg.mentions:
-        await user.send("You have been warned on " + str(user.guild.name) + " for " + str(warning))
-        await msg.channel.send(str(user) + " has been warned.")
+        await user.send(f"You have been warned on {user.guild.name} for {warning}")
+        await msg.channel.send(f"{user.mention} has been warned.")
         
 
 async def shutdown(client, msg):
-    
-    if msg.author.id == 698707989531459595:
-        async with msg.channel.typing():
-                await asyncio.sleep(2)
-        await msg.channel.send("Shutting down...", delete_after=1)
-        await asyncio.sleep(2)
-        await msg.delete()
-        
-        await client.logout()
-        print ("Bot shutdown")
+    async with msg.channel.typing():
+            await asyncio.sleep(1)
+    await msg.channel.send("Shutting down...")
+    await msg.delete()
+    await client.logout()
+    print ("Bot shutdown")
 
 async def yeet(msg):
     if discord.utils.get(msg.author.roles, name="Head Admin") is None:
@@ -130,11 +137,11 @@ async def yeet(msg):
                     if m.author == user:
                         me.append(m)
                         await msg.channel.delete_messages(me)
-                        await msg.channel.send("All messages by " + user.mention + " have been deleted.")
+                        await msg.channel.send(f"All messages by {user.mention} have been deleted.")
         else:
             llimit = msg.content.split(" ")[1]
             await msg.channel.purge(limit=int(llimit))
-            await msg.channel.send("Chat cleared by " + msg.author.display_name, delete_after=2.0) 
+            await msg.channel.send(f"Chat cleared by {msg.author.mention}", delete_after=2.0) 
 
 async def channeladd(msg):
     if discord.utils.get(msg.author.roles, name="Head Admin") is None:
@@ -144,10 +151,10 @@ async def channeladd(msg):
         channeltype = msg.content.split(" ")[2]
         if str(channeltype) == "voice":
             channel = await msg.guild.create_voice_channel(str(channelname))
-            await msg.channel.send("Voice Channel- `" + str(channel) + "` has been created.")
+            await msg.channel.send(f"Voice Channel- `{channel}` has been created.")
         if str(channeltype) == "text":
             channel = await msg.guild.create_text_channel(str(channelname))
-            await msg.channel.send("Text Channel- `" + str(channel) + "` has been created.")
+            await msg.channel.send(f"Text Channel- `{channel}` has been created.")
 
 async def channeldel(msg):
     if discord.utils.get(msg.author.roles, name="Head Admin") is None:
@@ -164,39 +171,35 @@ async def roleadd(msg):
     else:
         rolename = msg.content.split(" ")[1]
         await msg.guild.create_role(name=str(rolename))
-        await msg.channel.send("Role " + str(rolename) + " has been created.")
+        await msg.channel.send(f"Role {rolename} has been created.")
+    
+async def roledel(msg):
+    if discord.utils.get(msg.author.roles, name="Head Admin") is None:
+        await msg.channel.send("You can't do that.")
+    else:
+        rolename = msg.content.split(" ")[1]
+        await msg.guild.create_role(name=str(rolename))
+        await msg.channel.send(f"Role has been deleted.")
 
 async def addrole(msg):
-    
-    
-    
     rol = msg.content
     rolemsg = rol.replace("=addrole ", "")
     role = discord.utils.get(msg.guild.roles , name=str(rolemsg))
-    print (role)
-    user = msg.author
-    if role in user.roles:
-        await msg.channel.send(user.mention + " already has " + str(role))
+    if role in msg.author.roles:
+        await msg.channel.send(f"{msg.author.mention} already has {role}")
     else:
-        await user.add_roles(role)
-        await msg.channel.send(str(role) + " has been added to " + user.mention)
-        
-        
-    
-    
-    
-
+        await msg.author.add_roles(role)
+        await msg.channel.send(f"{role} has been added to {msg.author.mention}")
+   
 async def delrole(msg):
     rol = msg.content
     rolemsg = rol.replace("=delrole ", "")
     role = discord.utils.get(msg.guild.roles , name=str(rolemsg))
-    print (role)
-    user = msg.author
-    if role not in user.roles:
-        await msg.channel.send(user.mention + " doesn't have " + str(role))
+    if role not in msg.author.roles:
+        await msg.channel.send(f"{msg.author.mention} doesn't have {role}")
     else:
-        await user.remove_roles(role)
-        await msg.channel.send(str(role) + " has been removed from " + user.mention)
+        await msg.author.remove_roles(role)
+        await msg.channel.send(f"{role} has been removed from {msg.author.mention}")
         
         
     

@@ -11,11 +11,6 @@ import asyncio
 import records
 import random
 import youtube_dl
-from gamesnstuff import *
-from info import *
-from ppl import *
-from moderation import *
-from music import *
 import logging
 import json
 from discord import FFmpegPCMAudio
@@ -27,21 +22,15 @@ import requests
 client = discord.Client()
 
 @client.event
-#rps, joke, cat, dog
 async def rps(msg):
     r = "rock"
     s = "scissors"
     p = "paper"
     rand = ""
-    #string
     rps = [r,p,s]
-    user_choice = msg.content.split(" ")[1] #=rps user_choice
-    # index 0 = item 1, index 1 = item 2, ...
-    # list[1] = second item of list
-    #msg.content.split(" ")[1] gets the second item from the user message
+    user_choice = msg.content.split(" ")[1] 
     rand = random.choice(rps)
-    # DEBUGGING: SENDING THE VARIABLES SO THAT WE CAN FIGURE OUT WHAT'S GOIN ON
-    await msg.channel.send("Computer Choice (randomly generated): ||" + str(rand) + "|| \nUser Choice: " + str(user_choice))
+    await msg.channel.send(f"Computer Choice (randomly generated): ||{rand}|| \nUser Choice: {user_choice}")
             
     if (rand == r and user_choice == "rock"):
             await msg.channel.send("Its a tie!")
@@ -61,6 +50,8 @@ async def rps(msg):
         await msg.channel.send("You cut my paper. you win!")
     elif (rand == s and user_choice =="scissors"):
         await msg.channel.send("Its a tie!")       
+    else:
+        await msg.channel.send("There was a problem proccessing your input, please try again!")
 
 @client.event
 async def joke(msg):
@@ -108,16 +99,6 @@ async def aww(msg):
     await msg.channel.send(embed=embed)  
 
 @client.event
-async def horror(msg):
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get('https://www.reddit.com/r/horrormemes/new.json?sort=hot') as r:
-            res = await r.json()
-    embed=discord.Embed(title="Enjoy some horror memes from reddit", color=0x06f459)
-    embed.set_image(url=(res['data']['children'] [random.randint(0, 25)]['data']['url']))
-    embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
-    await msg.channel.send(embed=embed) 
-
-@client.event
 async def thoughts(msg):
      async with aiohttp.ClientSession() as cs:
         async with cs.get('https://www.reddit.com/r/Showerthoughts/new.json?sort=hot') as r:
@@ -139,36 +120,33 @@ async def wholesome(msg):
 
 @client.event
 async def roll(msg):
-    numb2 = msg.content.split(" ")[1]
-    roll = random.randint(1,int(numb2))
-    await msg.channel.send("Bot rolled a dice! \nResult: " + str(roll))
+    numb = msg.content.split(" ")[1]
+    roll = random.randint(1,int(numb))
+    await msg.channel.send(f"Bot rolled a dice with {numb} sides! \nResult: {roll}")
 
 @client.event
 async def dm(msg):
     dmdm = msg.content.split(" ")[2:]
-    dms = ''.join(dmdm)
+    dm = ''.join(dmdm)
     for user in msg.mentions:
-        await user.send(str(dms))
-        await msg.channel.send(user.mention + "has been dmed.")
+        await user.send(str(dm))
+        await msg.channel.send(f"{user.mention} has been dmed.")
 
 @client.event
 async def say(msg):
     words = msg.content
-    wordss = words.replace("=say", "")
+    words = words.replace("=say ", "")
     await msg.delete()
-    async with msg.channel.typing():
-        await asyncio.sleep(2)
-    await msg.channel.send(str(wordss))
+    await msg.channel.send(str(words))
 
 @client.event
 async def afk(msg):
     member = msg.author
     role = discord.utils.get(msg.guild.roles , name='afk')
-    reasonn = msg.content
-    reason = reasonn.replace("=afk ", "")
+    reason = msg.content.replace("=afk ", "")
     if role not in member.roles:
         await member.add_roles(role)
-        await msg.channel.send(member.mention + ", you are now AFK- " + reason)
+        await msg.channel.send(f"{member.mention}, you are now AFK for the reason- {reason}")
 
 @client.event
 async def urban(msg):
@@ -209,30 +187,22 @@ async def urban(msg):
 
 @client.event
 async def google(msg):
+    query =  msg.content
+    query = query.replace("=google ", "")
 
-    quer =  msg.content
-    query = quer.replace("=google ", "")
-
-    try: 
-        from googlesearch import search 
-    except ImportError:  
-        await msg.channel.send("No module named 'google' found") 
-
-
+     
+    from googlesearch import search 
     for j in search(query, tld="co.in", num=1, stop=1, pause=2): 
         await msg.channel.send(j) 
 
 @client.event
 async def poll(msg):
 
-    pol = msg.content
-    poll = pol.replace("=poll ", "")
-    
-    
-    
+    poll = msg.content
+    poll = poll.replace("=poll", "")
     await msg.delete()
     
-    react = await msg.channel.send("@everyone" + poll)
+    react = await msg.channel.send(f"@everyone-{poll}")
     await react.add_reaction("🇾")
     await react.add_reaction("🇳")
 
@@ -240,12 +210,10 @@ async def poll(msg):
 async def flip(msg):
     number = random.randint(1,2)
     if number == 1:
-        flipp = "🪙Heads!🪙"
-
+        flip = "🪙Heads!🪙"
     if number == 2:
-        flipp = "🪙Tails!🪙"
-
-    await msg.channel.send(str(flipp))
+        flip = "🪙Tails!🪙"
+    await msg.channel.send(str(flip))
 
 @client.event
 async def meme(msg):
@@ -277,38 +245,36 @@ async def russianroulette(msg):
 @client.event
 async def kill(msg):
     for user in msg.mentions:
-        c = str(user.mention) + " was told to do a backflip off a building by " + str(msg.author.mention)
-        c1 = str(user.mention) + " was choked too hard by " + str(msg.author.mention)
-        c2 = str(user.mention) + " annoyed " + str(msg.author.mention) + " and was stabbed to death."
-        c3 = str(user.mention) + " was shot by " + str(msg.author.mention) + " with a frozen chicken."
-        c4 = str(msg.author.mention) + " directed a wrecking ball towards " + str(user.mention) + "'s house."
-        c5 = str(msg.author.mention) + " shoved " + str(user.mention) + " from their ego level to their IQ level."
-        c6 = str(msg.author.mention) + " threw " + str(user.mention) + " into a snake pit."
-        c7 = str(user.mention) + " was smashed too hard by " + str(msg.author.mention)
-        c8 = str(user.mention) + " got thrown into a volcano by " + str(msg.author.mention) 
-        c9 = str(msg.author.mention) + " threw an exploding kitten at " + str(user.mention)
-        c10 = str(user.mention) + " attempted to attack " + str(msg.author.mention) + " and failed."
-        c11 = str(msg.author.mention) + " buffed " + str(user.mention) + "'s banana too hard."
-        clist = [c, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11]
-        await msg.channel.send(random.choice(clist))
+        if user == msg.author:
+            await msg.channel.send("You are not allowed to kill yourself, kill someone else instead.")
+        else:
+            c = f"{user.mention} was shoved off a building by {msg.author.mention}"
+            c1 = f"{user.mention} was choked too hard by {msg.author.mention}"
+            c2 = f"{user.mention} annoyed {msg.author.mention} and was stabbed to death."
+            c3 = f"{user.mention} was shot by {msg.author.mention} with a frozen chicken."
+            c4 = f"{msg.author.mention} directed a wrecking ball towards {user.mention}'s house."
+            c5 = f"{msg.author.mention} shoved {user.mention} from their ego level to their IQ level."
+            c6 = f"{msg.author.mention} threw {user.mention} into a snake pit."
+            c7 = f"{user.mention} was smashed too hard by {msg.author.mention}"
+            c8 = f"{user.mention} got thrown into a volcano by {msg.author.mention}"
+            c9 = f"{msg.author.mention} threw an exploding kitten at {user.mention}"
+            c10 = f"{user.mention} tried to flirt with {msg.author.mention}"
+            c11 = f"{msg.author.mention} buffed {user.mention}'s banana too hard."
+            clist = [c, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11]
+            await msg.channel.send(f"{random.choice(clist)}")
 
 @client.event
 async def smite(msg):
     if msg.author.id == 698707989531459595:
-        if msg.mentions:
-            for user in msg.mentions:
-                await msg.channel.send(user.mention + " has been smited by waffles!")
-
-async def uselesscommand(msg):
-    if msg.author.id == 698707989531459595:
-        await msg.channel.send("That command did nothing!")
+        for user in msg.mentions:
+            await msg.channel.send(user.mention + " has been smited!")
 
 async def announce(msg):
     if msg.author.id == 698707989531459595:
         
-        announcee = msg.content
-        announcement = announcee.replace("=announce", "")
-        await msg.channel.send(announcement + "\n@everyone")
+        announcement = msg.content
+        announcement = announcement.replace("=announce", "")
+        await msg.channel.send(f"{announcement} \n||@everyone||")
         await msg.delete()
 
 async def bigletters(msg):
