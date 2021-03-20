@@ -64,6 +64,15 @@ def search(arg):
     return {'source': info['formats'][0]['url'], 'title': info['title']}
     
 
+
+
+with youtube_dl.YoutubeDL(YDL_OPTIONS ) as ydl:
+        info = ydl.extract_info(f"ytsearch:{search}", download=False)['entries'][0]
+    return {'source': info['formats'][0]['url'], 'title': info['title']}
+
+
+
+
 async def on_message(ctx, msg)
     query1 = msg.content.split(" ")[1:]
     
@@ -140,3 +149,8 @@ await msg.add_reaction("👍")
         user = msg.author
         if user.bot == False:
             await msg.channel.send("Hey you kid you need to go to sleep so get out of here and sleep before i kick you stop texting in discord servers its sleepy time so get the frick out of here")
+
+
+
+
+            

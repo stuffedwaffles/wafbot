@@ -18,6 +18,7 @@ from youtube_dl import YoutubeDL
 import urllib.parse, urllib.request, re
 import wavelink
 import requests
+import aiohttp 
 
 client = discord.Client()
 
@@ -194,6 +195,18 @@ async def google(msg):
     from googlesearch import search 
     for j in search(query, tld="co.in", num=1, stop=1, pause=2): 
         await msg.channel.send(j) 
+        
+@client.event
+async def video(msg):
+    searchfrommsg = msg.content.split(" ")[1:]
+    search = str(searchfrommsg)
+    query_string = urllib.parse.urlencode({'search_query': search})
+    htm_content = urllib.request.urlopen(
+        'http://www.youtube.com/results?' + query_string)
+    search_results = re.findall(r'/watch\?v=(.{11})',
+                                htm_content.read().decode())
+    url = str('http://www.youtube.com/watch?v=' + search_results[0])
+    await msg.channel.send(f"Here is the first result to your search: {url}")
 
 @client.event
 async def poll(msg):

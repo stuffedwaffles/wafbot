@@ -23,16 +23,25 @@ intents = discord.Intents.default()
 client = discord.Client()
 
 song_queue = []
+queuetoshow = []
+requestedby = []
+songdurations =[]
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True'}
     
-
+def repeat(guild, voice):
+    
+        voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, voice))
+        voice.is_playing()
 
 def play_next(client, msg):
     voice = get(client.voice_clients, guild=msg.guild)
     if len(song_queue) > 1:
         del song_queue[0]
-        voice.play(discord.FFmpegPCMAudio(song_queue[0][source], **FFMPEG_OPTIONS), after=lambda e: play_next(client, msg))
+        del queuetoshow[0]
+        del songdurations[0]
+        del requestedby[0]
+        voice.play(discord.FFmpegPCMAudio(song_queue[0], **FFMPEG_OPTIONS), after=lambda e: play_next(client, msg))
         voice.is_playing()
 
 @client.event
@@ -51,63 +60,65 @@ async def leave(client, msg):
     await msg.channel.send(f"Bot left `{channel}`!")
     await msg.add_reaction("👍")
 
-async def video(msg):
-    searchfrommsg = msg.content.split(" ")[1:]
-    search = str(searchfrommsg)
-    query_string = urllib.parse.urlencode({'search_query': search})
-    htm_content = urllib.request.urlopen(
-        'http://www.youtube.com/results?' + query_string)
-    search_results = re.findall(r'/watch\?v=(.{11})',
-                                htm_content.read().decode())
-    url = str('http://www.youtube.com/watch?v=' + search_results[0])
-    await msg.channel.send(f"Here is the first result to your search: {url}")
-
 async def play(client, msg):
     voice = discord.utils.get(client.voice_clients, guild=msg.channel.guild)
-    searchf = msg.content
-    searchfrommsg = searchf.replace("=play ", "")
-    search = str(searchfrommsg)
+    if voice is None:
+        channel = msg.author.voice.channel
+        await channel.connect()
+        await msg.channel.send(f"Bot joined `{channel}`!")
+    search = msg.content.replace("=play ", "")
     query_string = urllib.parse.urlencode({'search_query': search})
     htm_content = urllib.request.urlopen(
         'http://www.youtube.com/results?' + query_string)
     search_results = re.findall(r'/watch\?v=(.{11})',
                                 htm_content.read().decode())
     song = str('http://www.youtube.com/watch?v=' + search_results[0])
+    with youtube_dl.YoutubeDL(YDL_OPTIONS ) as ydl:
+        info = ydl.extract_info(f"ytsearch:{search}", download=False)['entries'][0]
     
-    print (song)
-    title = searchfrommsg
+    duration = float(info['duration'])
+    duration = duration / float(60)
+    duration = int(duration) 
     song_queue.append(song)
-    
-    if voice is None:
-        await msg.channel.send("Not in a vc!")
-
+    queuetoshow.append(str(info['title']))
+    songdurations.append(str(duration))
+    requestedby.append(str(msg.author))
+    voice = discord.utils.get(client.voice_clients, guild=msg.channel.guild)
     if voice.is_playing():
         await msg.channel.send("Added to queue!")
     else:
-        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+        with youtube_dl.YoutubeDL(YDL_OPTIONS ) as ydl:
             ydl.download([song])
-        
-
+        voice.stop()
+        user = client.user
+        await user.edit(deafen=True)
         for file in os.listdir("./"):
             if file.endswith(".webm"):
                 os.rename(file, "song.webm")
                 voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: play_next(client, msg))
-                await msg.channel.send(f"Playing `{title}`!")
+                embed=discord.Embed(title=f"Now Playing!", url=song, description=info['title'], color=0x06f459)
+                embed.set_thumbnail(url=info['formats'][0]['url'])
+                embed.add_field(name=f"`Length`-", value=f"{duration} minutes", inline=False)
+                embed.add_field(name="`Requested by-`", value=f"{msg.author}", inline=False)
+                embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more info on bot")
+                await msg.channel.send(embed=embed)
                 await msg.add_reaction("👍")
-            if file.endswith(".m4a"):
-                os.rename(file, "song.webm")
-                voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: play_next(client, msg))
-                await msg.channel.send(f"Playing `{title}`!")
-                await msg.add_reaction("👍")
+           
+async def yoink(msg):
+    embed=discord.Embed(title=f"Currently Playing Song- {queuetoshow[0]}", url=song_queue[0], description=f"Reqested by- {requestedby[0]}", color=0x06f459)
+    await msg.channel.send(embed=embed)
+            
             
 async def queue(msg):
     
     if song_queue == []:
         await msg.channel.send("Nothing in queue!")
     else:
-        embed=discord.Embed(title="Queue!(still in progress dont judge me)", description=f"Now Playing- {song_queue[2]}", color=0x06f459)
-        embed.add_field(name="Rest of queue-", value=song_queue[2:], inline=False)
-        embed.set_footer(text="Contact STUFFEDWAFFLES for more info on bot")
+        embed=discord.Embed(title=f"1. Currently Playing Song-{queuetoshow[0]}", description="Rest Of Queue-", color=0x06f459)
+        if len(song_queue) > 1:
+            embed.add_field(name=f"2. {queuetoshow[1]}", value=f"Length-{songdurations[1]} minutes, Requested by- {requestedby[2]}", inline=False)
+        if len(song_queue) > 2:
+            embed.add_field(name=f"3. {queuetoshow[2]}", value=f"Length-{songdurations[2]} minutes, Requested by- {requestedby[2]}", inline=False)
         await msg.channel.send(embed=embed)
 
 async def pause(client, msg):
@@ -126,29 +137,29 @@ async def clear(client, msg):
     voice: discord.VoiceClient = discord.utils.get(client.voice_clients, guild=msg.author.guild)
     for file in os.listdir("./"):
             if file.endswith(".webm"):
-                os.remove("song.webm")
+                os.remove(file)
     voice.stop()
     song_queue.clear()
+    queuetoshow.clear()
     await msg.add_reaction("👍")
 
 async def loop(client, msg):
     voice = discord.utils.get(client.voice_clients, guild=msg.channel.guild)
     guild = msg.guild
-    def repeat(guild, voice):
-    
-        voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, VoiceClient))
-        voice.is_playing()
-    if voice.is_playing() is False:
-        voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, voice))
-        await msg.channel.send("Looping song!")
-        await msg.add_reaction("👍")
+    voice.pause()
+    voice.play(discord.FFmpegPCMAudio("song.webm"), after=lambda e: repeat(guild, voice))
+    await msg.channel.send("Looping song!")
+    await msg.add_reaction("👍")
 
 async def remove(client, msg):
     
     indexx = msg.content.split(" ")[1]
-    sum = float(indexx) + float(1)
+    sum = float(indexx) - float(1)
     index = int(sum)
     del song_queue[index]
+    del queuetoshow[index]
+    del songdurations[index]
+    del requestedby[index]
     await msg.channel.send("Removed song!")
     await msg.add_reaction("👍")
 
