@@ -70,7 +70,9 @@ async def unmute(msg):
             
             role = discord.utils.get(msg.guild.roles, name='Muted')
             await user.remove_roles(role)
-            await user.edit(mute=False, deafen=False)
+            voice = get(client.voice_clients, guild=msg.guild)
+            if voice == True:
+                await user.edit(mute=False, deafen=False)
             await msg.channel.send(f"{user} has been unmuted by {msg.author.mention}")
     else:
         await msg.channel.send("You dont have permission to unmute")
@@ -171,7 +173,7 @@ async def roleadd(msg):
 async def roledel(msg):
     if msg.author.guild_permissions.manage_roles:
         rolename = msg.content.split(" ")[1]
-        await msg.guild.create_role(name=str(rolename))
+        await msg.guild.delete_role(name=str(rolename))
         await msg.channel.send(f"Role has been deleted.")
     else:
         await msg.channel.send("You can't do that.")

@@ -71,11 +71,12 @@ async def botinfo(msg):
     date = "Nov 3rd, 2020"
     embed=discord.Embed(title="Waf Bot Info!", description="Do =help for a list of commands.", color=0x06f459)
     embed.add_field(name="Bot Command Prefix- ", value="=", inline=False)
-    embed.add_field(name="Bot signed in as- ", value=str(f"<@{id}>"), inline=True)
+    embed.add_field(name="Bot signed in as- ", value=str("Waf's Bot#3968"), inline=True)
     embed.add_field(name="Bot ID- ", value=str(id), inline=True)
-    embed.add_field(name="Created by- ", value=str(f"<@{698707989531459595}>"), inline=False)
+    embed.add_field(name="Created by- ", value="STUFFEDWAFFLES#8367", inline=False)
     embed.add_field(name="Created on- ", value=str(date), inline=True)
-    embed.add_field(name="Other info-", value="Waf Bot is coded in discord.py by STUFFEDWAFFLES. It can be added to multiple servers, however, it was mainly made for Le Kingdom.")
+    embed.add_field(name="Connected in version- ", value=str(discord.__version__), inline=True)
+    embed.add_field(name="Other info-", value="Waf Bot is coded in discord.py by STUFFEDWAFFLES. It can be added to multiple servers. To get the full code for the bot, do =github in the bot commands channel!", inline=False)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/762718464124125226/805548671198298122/Screenshot_2021-01-31_at_19.28.48.png")
     embed.set_footer(text="Contact STUFFEDWAFFLES8367 for more information on bot")
 
@@ -134,7 +135,7 @@ async def hypickle(msg):
     await msg.channel.send("Hypixel IP- mc.hypixel.net \nAwesome PVP and Minigame server! Has games such as Bedwars, Skywars, Murder Mystery, Mega Walls, Skyblock, and more!")
 
 async def invite(msg):
-    await msg.channel.send("Here is an invite to a server that you shouldn't join: https://discord.gg/aCY6qSA88h")
+    await msg.channel.send("Here is an invite to a server that you shouldn't join: https://discord.gg/CEEtctHSpj")
 
 async def myid(msg):
     await msg.channel.send(msg.author.id)

@@ -44,9 +44,16 @@ logger.addHandler(handler)
 
 @client.event
 async def on_message(msg):
+    print(f'{msg.content} sent by {msg.author}')
    
     #basic responses 
-              
+    if "This hat is sponsored by RAID, SHADOW LEGENDS" in msg.content:
+        deleteing = await msg.channel.send("fuckoff you fucking advertiser")
+        await asyncio.sleep(3)
+        await msg.delete()
+        await deleteing.delete() 
+        
+                
     if msg.content.lower() == "e":
         await msg.delete()
         respond = await msg.channel.send("stfu")
@@ -359,29 +366,38 @@ async def on_message(msg):
         
         if "=bigletters" in msg.content:
             await bigletters(msg)
-            
-        
 
        
     
         
-
+        
         if msg.content.startswith("="):
             print(f'{msg.author} ran command {msg.content} at {msg.created_at.strftime("%a, %b %d %Y at %H:%M:%S %p")} in {msg.channel}')
-
+        
+        
 
 
 #welcome and leave      
 @client.event
 async def on_member_join(member):
-    await member.send("Hey there " + member.mention + "! Welcome to **" + str(member.guild.name) + "**! If you need any help feel free to ask the admins, and to see a list of my commands do `=help` in the bot commands channel. Enjoy your stay!")
+    await member.send(f"Hey there {member.mention}! Welcome to **{member.guild.name}**! If you need any help feel free to ask the admins, and to see a list of my commands do `=help` in the bot commands channel. Enjoy your stay!")
+
+
+
 
 #bot status 
 @client.event
 async def on_ready():    
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="minecraft alone | type =help"))
-    print(f'Bot connected as {client.user.name}')
-     
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="love you all"))
+    print(f'Bot connected as {client.user.name} in v{discord.__version__}')
+    for file in os.listdir("./"):
+            if file.endswith(".webm"):
+                os.remove(file)
+
+    
+
+    
+    
    
 
 with open(os.getcwd()+"/secrets.json") as f:

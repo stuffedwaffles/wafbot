@@ -153,4 +153,13 @@ await msg.add_reaction("👍")
 
 
 
-            
+  #chat hat
+  # 762718464124125226          
+
+  channel = client.get_channel(762718464124125226)
+  if msg.channel == channel:
+      print(msg.content)
+#jedi
+userid = 727612091187462244
+user = await client.fetch_user(userid)
+await user.send("")
